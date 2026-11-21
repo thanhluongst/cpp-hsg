@@ -1900,5 +1900,23 @@ function route(){clearInterval(TMR);const m=/^#ch(\d+)$/.exec(location.hash),hs=
 $('#menuBtn').onclick=()=>$('#nav').classList.toggle('open');
 addEventListener('hashchange',route);route();
 </script>
+<style>
+#ob{position:fixed;right:12px;bottom:14px;z-index:20;background:var(--gold);color:#fff;border:0;border-radius:999px;padding:9px 14px;font:inherit;font-size:13px;font-weight:600;box-shadow:0 4px 14px #0004;cursor:pointer;display:none}
+#obp{position:fixed;left:12px;right:12px;bottom:64px;z-index:21;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 10px 30px #0003;display:none;font-size:14px}
+#obp ol{margin:6px 0;padding-left:20px}
+</style>
+<button id="ob">🌐 Mở bằng trình duyệt</button>
+<div id="obp"><b>Mở trang bằng trình duyệt web</b><ol id="obs"></ol><div class="row"><button class="b pri" id="obc">📋 Sao chép link</button><button class="b" id="obx">Đóng</button><span id="obm" class="lab"></span></div></div>
+<script>
+(function(){const ua=navigator.userAgent||'',inApp=/Zalo|FBAN|FBAV|FB_IAB|FBIOS|Messenger|Instagram|Line\/|TikTok|; wv\)/i.test(ua),and=/Android/i.test(ua),ios=/iPhone|iPad|iPod/i.test(ua);
+ if(!inApp||!(and||ios))return;const b=document.getElementById('ob'),p=document.getElementById('obp');b.style.display='block';
+ document.getElementById('obs').innerHTML=and?'<li>Nếu trang chưa tự mở: bấm dấu <b>⋮</b> (góc trên bên phải).</li><li>Chọn <b>Mở bằng trình duyệt</b> (hoặc Mở trong Chrome).</li><li>Hoặc sao chép link rồi dán vào Chrome.</li>':'<li>Bấm dấu <b>⋯</b> hoặc biểu tượng 🧭 (góc dưới/trên bên phải).</li><li>Chọn <b>Mở bằng Safari</b> / Mở trong trình duyệt.</li><li>Hoặc sao chép link rồi dán vào Safari.</li>';
+ b.onclick=()=>{const u=location.href;p.style.display='block';
+  if(and)location.href='intent://'+u.replace(/^https?:\/\//,'')+'#Intent;scheme=https;action=android.intent.action.VIEW;S.browser_fallback_url='+encodeURIComponent(u)+';end';
+  else location.href='x-safari-'+u};
+ document.getElementById('obx').onclick=()=>p.style.display='none';
+ document.getElementById('obc').onclick=()=>{const u=location.href.split('#')[0],m=document.getElementById('obm');
+  (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>m.textContent='Đã sao chép!').catch(()=>{m.textContent=u})};})();
+</script>
 </body>
 </html>
