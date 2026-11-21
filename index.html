@@ -1873,7 +1873,7 @@ function chapter(id,tab){const [i,t,G]=CH[id-1];
  <div class="tabs">${tabs.map(([k,n])=>`<button data-tab="${k}" class="${tab===k?'on':''}">${n}</button>`).join('')}</div><div class="card" id="body"></div>
  <div class="pager">${i>1?`<a href="#ch${i-1}"><small>← Chương trước</small>${CH[i-2][1]}</a>`:''}${i<CH.length?`<a class="r" href="#ch${i+1}"><small>Chương sau →</small>${CH[i][1]}</a>`:''}</div>`;
  return h}
-function fillBody(id,tab){const b=$('#body');
+function fillBody(id,tab){const b=$('#body');b.onclick=e=>{const g=e.target.dataset.go;if(g)setTab(g)};
  if(tab==='lt'){b.innerHTML=md($('#t'+id).textContent)+`<div class="row" style="margin-top:16px"><button class="b pri" data-go="mh">Xem minh họa →</button></div>`}
  if(tab==='mh'){b.innerHTML=`<div class="viz-h"><span class="tag">Tương tác</span><h3 style="margin:0">${VIZ[id].t}</h3></div><div id="viz"></div><div class="row" style="margin-top:16px"><button class="b pri" data-go="tn">Làm trắc nghiệm →</button></div>`;VIZ[id].f($('#viz'))}
  if(tab==='tn')quiz(id,b)}
