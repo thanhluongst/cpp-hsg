@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C++ cho HSG – Học tương tác</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#13294b;--navy2:#1d3a66;--blue:#2563eb;--sky:#dbeafe;--gold:#d99a1c;--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--bg:#f6f8fb;--ok:#15803d;--okb:#dcfce7;--bad:#b91c1c;--badb:#fee2e2;--hl:#fff3c4}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Be Vietnam Pro",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+code,pre,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+header{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:5}
+header .logo{width:36px;height:36px;border-radius:10px;background:var(--blue);display:grid;place-items:center;font-weight:700}
+header h1{font-size:17px;margin:0;font-weight:600}
+header small{color:#9fb3d9;display:block;font-size:12px;font-weight:400}
+#menuBtn{display:none;margin-left:auto;background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 12px;font:inherit;cursor:pointer}
+.wrap{display:flex;max-width:1280px;margin:0 auto}
+nav{width:270px;flex:none;padding:18px 12px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}
+nav .grp{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:14px 10px 6px}
+nav a{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:14px}
+nav a:hover{background:#eaf0f8}
+nav a.on{background:var(--navy);color:#fff}
+nav a .n{width:24px;height:24px;flex:none;border-radius:6px;background:#e7ecf3;color:var(--navy);display:grid;place-items:center;font-size:12px;font-weight:600}
+nav a.on .n{background:var(--blue);color:#fff}
+nav a .st{margin-left:auto;font-size:12px}
+nav a.dis{color:#a0aec0;pointer-events:none}
+main{flex:1;min-width:0;padding:26px 30px 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:20px}
+.kicker{color:var(--gold);font-weight:700;letter-spacing:.1em;font-size:12px;text-transform:uppercase}
+h2.title{font-size:30px;margin:4px 0 14px;color:var(--navy);line-height:1.25}
+h3{color:var(--navy);margin:22px 0 8px;font-size:20px}
+h3:first-child{margin-top:0}
+.goals{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px 18px}
+.goals b{color:var(--ok)}
+.goals ul{margin:6px 0 0;padding-left:20px}
+p code,li code{background:#eef2f7;padding:1px 6px;border-radius:5px;font-size:.88em;color:#0f3d8a}
+pre.code{background:#0f1e36;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow:auto;font-size:14px;line-height:1.55;margin:10px 0}
+.k{color:#7cb7ff;font-weight:600}.s{color:#a5e6a1}.c{color:#7f8ea8;font-style:italic}.d{color:#f5b971}.p{color:#e59bff}
+.note{background:#fffbeb;border-left:4px solid var(--gold);padding:10px 14px;border-radius:8px;margin:10px 0}
+.tabs{display:flex;gap:6px;margin:0 0 16px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:#fff;padding:8px 16px;border-radius:999px;font:inherit;font-weight:500;cursor:pointer;color:var(--ink)}
+.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+button.b{border:1px solid #cbd5e1;background:#fff;padding:7px 13px;border-radius:8px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
+button.b:hover{background:#f1f5f9}
+button.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+button.pri:hover{background:#1d4ed8}
+input,select{font:inherit;padding:6px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;max-width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.lab{font-size:14px;color:var(--mute)}
+.viz-h{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.viz-h .tag{background:var(--sky);color:var(--blue);font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+/* tracer */
+.tr-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:10px}
+.tr-code{background:#0f1e36;color:#e2e8f0;border-radius:10px;padding:10px 0;margin:0;font-size:14px;overflow:auto}
+.ln{padding:1px 14px 1px 0;white-space:pre;display:flex}
+.ln .no{width:34px;flex:none;text-align:right;padding-right:12px;color:#55657f;user-select:none}
+.ln.on{background:#284a7c;box-shadow:inset 4px 0 0 #fbbf24}
+.vars{width:100%;border-collapse:collapse;font-size:14px}
+.vars th,.vars td{border:1px solid var(--line);padding:5px 10px;text-align:left}
+.vars th{background:#f1f5f9;font-weight:600;width:45%}
+.vars td{font-family:"JetBrains Mono",monospace}
+.vars tr.chg td{background:var(--hl)}
+.out{background:#111827;color:#a7f3d0;font-family:"JetBrains Mono",monospace;border-radius:8px;padding:8px 12px;min-height:40px;margin-top:10px;white-space:pre-wrap;font-size:14px}
+.out:before{content:"Màn hình ▸ ";color:#6b7280}
+.tnote{margin-top:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:10px 14px;min-height:46px}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.pos{color:var(--mute);font-size:13px;margin-left:auto}
+.arr{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 4px}
+.cell{min-width:46px;text-align:center;border:2px solid #cbd5e1;border-radius:8px;background:#fff;padding:4px 6px;font-family:"JetBrains Mono",monospace;font-weight:600;transition:.2s}
+.cell small{display:block;font-size:11px;color:var(--mute);font-weight:400}
+.cell.hi{border-color:var(--blue);background:var(--sky)}
+.cell.mk{border-color:var(--gold);background:#fef3c7}
+.cell.dim{opacity:.45}
+/* grid 2D */
+.g2{display:inline-grid;gap:4px;margin:10px 0}
+.g2 .cell{min-width:44px;cursor:pointer}
+.g2 .hd{font-size:12px;color:var(--mute);text-align:center;align-self:center}
+/* quiz */
+.q{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0;background:#fff}
+.q .qt{font-weight:600;margin-bottom:6px}
+.q pre.code{font-size:13px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border:1px solid var(--line);border-radius:9px;margin:6px 0;cursor:pointer}
+.opt:hover{background:#f8fafc}
+.opt.sel{border-color:var(--blue);background:#eff6ff}
+.opt.ok{border-color:var(--ok);background:var(--okb)}
+.opt.no{border-color:var(--bad);background:var(--badb)}
+.opt .lt{font-weight:700;color:var(--navy);width:18px;flex:none}
+.ex{display:none;margin-top:8px;font-size:14px;background:#f8fafc;border-radius:8px;padding:8px 12px}
+.done .ex{display:block}
+.score{font-size:18px;font-weight:700;padding:12px 16px;border-radius:10px;margin-top:12px}
+.hero{background:linear-gradient(135deg,var(--navy),#1e4a8a);color:#fff;border:0}
+.hero h2{font-size:32px;margin:6px 0 8px;line-height:1.2}
+.hero h2 span{color:#93c5fd}
+.hero p{color:#c7d6ef;margin:0}
+.phase{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.phase>div{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+.phase b{color:var(--navy)}
+.pager{display:flex;justify-content:space-between;gap:10px;margin-top:10px}
+.pager a{flex:1;max-width:48%;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:#fff;text-decoration:none;color:var(--ink)}
+.pager a small{display:block;color:var(--mute)}
+.pager a.r{text-align:right;margin-left:auto}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.tbl{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
+.tbl td,.tbl th{border:1px solid var(--line);padding:6px 10px;text-align:left}
+.tbl th{background:#f1f5f9}
+.anat .ln{cursor:pointer}
+.anat .ln:hover{background:#1d3a66}
+@media (max-width:900px){
+ #menuBtn{display:block}
+ nav{position:fixed;left:0;top:64px;background:#fff;z-index:4;box-shadow:0 10px 30px #0003;transform:translateX(-105%);transition:.25s;visibility:hidden;box-shadow:none}
+ nav.open{transform:none;visibility:visible;box-shadow:0 10px 30px #0003}
+ main{padding:16px 12px 50px}
+ .card{padding:16px}
+ .tr-grid{grid-template-columns:1fr}
+ h2.title{font-size:24px}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">C++</div>
+ <div><h1>Lập trình C++ cho HSG</h1><small>Đội tuyển Tin học · Trường THCS Nhơn Mỹ</small></div>
+ <button id="menuBtn">☰ Bài học</button>
+</header>
+<div class="wrap">
+ <nav id="nav"></nav>
+ <main id="main"></main>
+</div>
+
+<!-- ======== LÝ THUYẾT (markdown rút gọn) ======== -->
+<script type="text/plain" id="t1">
+### Chương trình C++ đầu tiên
+Một chương trình C++ là một dãy **câu lệnh** được máy tính thực hiện lần lượt từ trên xuống. Trình biên dịch (compiler) dịch mã nguồn `.cpp` thành chương trình chạy được.
+```
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Xin chao!" << '\n';
+    return 0;
+}
+```
+- `#include <iostream>`: nạp thư viện nhập/xuất để dùng `cin`, `cout`.
+- `using namespace std;`: cho phép viết `cout` thay vì `std::cout`.
+- `int main() { ... }`: hàm chính, chương trình **bắt đầu chạy từ đây**.
+- Mỗi câu lệnh kết thúc bằng dấu chấm phẩy `;`.
+- `return 0;`: báo chương trình kết thúc bình thường.
+### In ra màn hình với cout
+Toán tử `<<` "đẩy" dữ liệu ra màn hình. Có thể nối nhiều phần liên tiếp.
+```
+cout << "Tong = " << 3 + 4 << '\n';   // Tong = 7
+cout << "Dong 1" << endl << "Dong 2"; // 2 dòng
+```
+> `'\n'` và `endl` đều xuống dòng; trong thi HSG nên dùng `'\n'` vì chạy nhanh hơn.
+### Chú thích
+- `// ...` chú thích một dòng.
+- `/* ... */` chú thích nhiều dòng. Chú thích không được biên dịch, dùng để giải thích code.
+### Quy trình làm bài thi
+- Viết code trong Dev-C++/Code::Blocks → biên dịch (F9/F11) → sửa lỗi → chạy thử với ví dụ.
+- Đặt tên tệp **đúng tên bài** trong đề, ví dụ `DOIGIAY.cpp`, để Themis chấm được.
+</script>
+<script type="text/plain" id="t2">
+### Biến là gì?
+**Biến** là một vùng nhớ có **tên**, có **kiểu dữ liệu** và chứa một **giá trị** có thể thay đổi khi chương trình chạy.
+```
+int tuoi = 13;        // khai báo và gán giá trị ban đầu
+double diem = 8.75;
+tuoi = tuoi + 1;      // gán giá trị mới: 14
+```
+### Các kiểu dữ liệu thường dùng
+- `int`: số nguyên khoảng ±2,1 tỷ (±2×10^9).
+- `long long`: số nguyên rất lớn, khoảng ±9,2×10^18.
+- `double`: số thực, khoảng 15 chữ số có nghĩa.
+- `char`: một ký tự, viết trong nháy đơn: `'A'`.
+- `bool`: `true` hoặc `false`.
+- `string`: xâu ký tự, viết trong nháy kép: `"Nhon My"`.
+> Đề thi hay cho số tới 10^12, 10^18 → phải dùng `long long`, nếu dùng `int` sẽ bị **tràn số** và ra kết quả sai.
+### Nhập dữ liệu với cin
+```
+int a, b;
+cin >> a >> b;          // nhập 2 số cách nhau bởi dấu cách hoặc xuống dòng
+cout << a + b << '\n';
+```
+### In số thực cố định chữ số thập phân
+```
+#include <iomanip>
+double x = 3.14159;
+cout << fixed << setprecision(2) << x;   // 3.14
+```
+### Hằng số và ép kiểu
+- `const int MAX = 100000;` — hằng không thể gán lại.
+- `int x = 7.9;` → x = 7 (phần thập phân bị cắt bỏ).
+- `(double)a / b` — ép a sang số thực để chia ra số thực.
+</script>
+<script type="text/plain" id="t3">
+### Toán tử số học
+- `+ - *` cộng, trừ, nhân.
+- `/` chia: nếu **cả hai là số nguyên** thì kết quả là **phần nguyên**: `17 / 5 = 3`.
+- `%` chia lấy dư (chỉ dùng cho số nguyên): `17 % 5 = 2`.
+- Với số âm, C++ cắt bỏ phần thập phân: `-7 / 2 = -3`, `-7 % 2 = -1`.
+```
+int a = 17, b = 5;
+cout << a / b << " " << a % b;        // 3 2
+cout << (double)a / b;                // 3.4
+```
+### Toán tử gán rút gọn, tăng giảm
+- `x += 3` tương đương `x = x + 3`; tương tự `-=`, `*=`, `/=`, `%=`.
+- `x++` tăng x thêm 1. `int j = i++;` → j nhận giá trị cũ rồi i mới tăng.
+### Toán tử so sánh và logic
+- So sánh: `== != < > <= >=` cho kết quả `true/false`.
+- Logic: `&&` (và), `||` (hoặc), `!` (phủ định).
+```
+bool chan = (n % 2 == 0);
+bool trongDoan = (x >= 1 && x <= 100);
+```
+### Thứ tự ưu tiên
+`! ` → `* / %` → `+ -` → so sánh → `&&` → `||` → gán. Khi không chắc, hãy dùng **dấu ngoặc**.
+> Mẹo đổi đơn vị: tách số giây N thành giờ–phút–giây bằng `/` và `%`: giờ = N/3600, phút = N%3600/60, giây = N%60.
+</script>
+<script type="text/plain" id="t4">
+### Câu lệnh if – else
+```
+if (dieuKien) {
+    // làm khi điều kiện đúng
+} else {
+    // làm khi điều kiện sai
+}
+```
+### Nhiều nhánh: else if
+Các điều kiện được kiểm tra **từ trên xuống**, gặp điều kiện đúng đầu tiên thì làm nhánh đó và **bỏ qua** các nhánh còn lại.
+```
+if (d >= 8) cout << "Gioi";
+else if (d >= 6.5) cout << "Kha";
+else if (d >= 5) cout << "Trung binh";
+else cout << "Yeu";
+```
+### Kết hợp điều kiện
+```
+// năm nhuận: chia hết cho 400, hoặc chia hết cho 4 nhưng không chia hết cho 100
+if ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0) cout << "Nhuan";
+```
+### switch – case
+Dùng khi so sánh một biến với nhiều **giá trị cụ thể**. Nhớ `break` sau mỗi case, nếu không chương trình chạy tràn xuống case kế tiếp.
+```
+switch (thu) {
+    case 2: cout << "Thu Hai"; break;
+    case 3: cout << "Thu Ba"; break;
+    default: cout << "Khac";
+}
+```
+### Toán tử 3 ngôi
+`int mx = (a > b) ? a : b;` — nếu a > b thì lấy a, ngược lại lấy b.
+> Lỗi kinh điển: viết `if (x = 5)` (phép gán) thay vì `if (x == 5)` (phép so sánh).
+</script>
+<script type="text/plain" id="t5">
+### Cấu trúc vòng lặp for
+```
+for (khởi tạo; điều kiện; bước nhảy) {
+    // thân vòng lặp
+}
+```
+Thứ tự thực hiện: **khởi tạo** (1 lần) → kiểm tra **điều kiện** → nếu đúng chạy **thân** → **bước nhảy** → kiểm tra lại điều kiện…
+```
+int s = 0;
+for (int i = 1; i <= n; i++) s += i;   // tổng 1 + 2 + ... + n
+```
+### Các dạng thường gặp
+- Đếm ngược: `for (int i = n; i >= 1; i--)`
+- Bước nhảy khác 1: `for (int i = 0; i < 10; i += 3)` → 0 3 6 9
+- Đếm số lần: vòng `for (int i = 1; i <= 10; i++)` chạy 10 lần.
+### Vòng lặp lồng nhau
+```
+for (int i = 1; i <= 3; i++)
+    for (int j = 1; j <= 4; j++)
+        cout << i * j << " ";   // thân trong chạy 3 × 4 = 12 lần
+```
+### Bài toán mẫu: đếm ước
+```
+int dem = 0;
+for (int i = 1; i <= n; i++)
+    if (n % i == 0) dem++;
+```
+> Không đặt dấu `;` ngay sau `for (...)` — khi đó thân vòng lặp là câu lệnh rỗng!
+</script>
+<script type="text/plain" id="t6">
+### Vòng lặp while
+Lặp **khi điều kiện còn đúng**. Dùng khi chưa biết trước số lần lặp.
+```
+while (n > 0) {
+    tong += n % 10;   // lấy chữ số cuối
+    n /= 10;          // bỏ chữ số cuối
+}
+```
+### Vòng lặp do – while
+Thân vòng lặp chạy **ít nhất 1 lần**, sau đó mới kiểm tra điều kiện.
+```
+do {
+    cin >> n;
+} while (n <= 0);     // nhập lại cho đến khi n dương
+```
+### break và continue
+- `break`: thoát ngay khỏi vòng lặp **gần nhất**.
+- `continue`: bỏ qua phần còn lại của lần lặp hiện tại, chuyển sang lần lặp tiếp theo.
+```
+for (int i = 1; i <= 10; i++) {
+    if (i % 3 == 0) continue;   // bỏ 3, 6, 9
+    if (i > 8) break;           // dừng khi i = 10
+    cout << i << " ";           // 1 2 4 5 7 8
+}
+```
+### Ứng dụng: thuật toán Euclid tìm UCLN
+```
+while (b != 0) {
+    int r = a % b;
+    a = b;
+    b = r;
+}
+// a là UCLN
+```
+> Vòng lặp vô hạn thường do quên cập nhật biến điều kiện (ví dụ quên `i++` hoặc `n /= 10`).
+</script>
+<script type="text/plain" id="t7">
+### Vì sao cần hàm?
+Hàm giúp **chia bài toán lớn thành phần nhỏ**, tránh viết lặp code, dễ kiểm tra lỗi.
+```
+kiểuTrảVề tênHàm(danhSáchThamSố) {
+    ...
+    return giáTrị;
+}
+```
+### Ví dụ
+```
+bool laNguyenTo(int n) {
+    if (n < 2) return false;
+    for (int i = 2; i * i <= n; i++)
+        if (n % i == 0) return false;
+    return true;
+}
+int main() {
+    cout << laNguyenTo(17);   // 1 (true)
+}
+```
+- Hàm không trả về giá trị dùng kiểu `void`.
+- Chỉ cần thử chia đến √n vì nếu n = p × q thì một trong hai thừa số ≤ √n.
+### Truyền tham trị và tham chiếu
+- **Tham trị** `void f(int x)`: hàm nhận **bản sao**, thay đổi x không ảnh hưởng biến gốc.
+- **Tham chiếu** `void f(int &x)`: x là **tên gọi khác** của biến gốc, thay đổi x là thay đổi biến gốc.
+### Biến cục bộ và toàn cục
+- Biến khai báo trong hàm là **cục bộ**: chỉ dùng được trong hàm đó.
+- Biến khai báo ngoài mọi hàm là **toàn cục**: hàm nào cũng dùng được, tự khởi tạo bằng 0.
+</script>
+<script type="text/plain" id="t8">
+### Khai báo mảng
+Mảng là dãy các phần tử **cùng kiểu**, đánh số **từ 0**.
+```
+int a[5] = {3, 1, 4, 1, 5};
+// a[0]=3, a[1]=1, a[2]=4, a[3]=1, a[4]=5
+```
+> `int a[5]` chỉ có chỉ số 0..4. Truy cập `a[5]` là **vượt mảng** — lỗi nguy hiểm, chương trình có thể chạy sai mà không báo.
+### Nhập và duyệt mảng
+```
+int n, a[1005];
+cin >> n;
+for (int i = 0; i < n; i++) cin >> a[i];
+for (int i = 0; i < n; i++) cout << a[i] << " ";
+```
+### Các thao tác cơ bản
+- **Tính tổng**: cộng dồn từng phần tử.
+- **Tìm max/min**: khởi tạo `mx = a[0]` rồi so sánh với các phần tử còn lại.
+- **Đếm** phần tử thỏa điều kiện.
+- **Mảng đánh dấu/đếm**: `cnt[x]++` để đếm số lần xuất hiện của giá trị x.
+```
+int mx = a[0];
+for (int i = 1; i < n; i++)
+    if (a[i] > mx) mx = a[i];
+```
+> Mảng khai báo **toàn cục** được khởi tạo toàn số 0 và có thể khai báo kích thước lớn (10^6) mà không bị lỗi bộ nhớ như khai báo trong hàm.
+</script>
+<script type="text/plain" id="t9">
+### Mảng hai chiều
+Mảng 2 chiều giống một **bảng** gồm hàng và cột. `a[i][j]` là phần tử ở **hàng i, cột j** (đều đánh số từ 0).
+```
+int a[3][4];          // 3 hàng, 4 cột = 12 phần tử
+int b[2][3] = {{1, 2, 3},
+               {4, 5, 6}};   // b[1][2] = 6
+```
+### Nhập và duyệt
+```
+cin >> n >> m;
+for (int i = 0; i < n; i++)
+    for (int j = 0; j < m; j++)
+        cin >> a[i][j];
+```
+### Các đường đặc biệt (ma trận vuông n × n)
+- **Hàng i**: các ô `a[i][0..m-1]`.
+- **Cột j**: các ô `a[0..n-1][j]`.
+- **Đường chéo chính**: các ô có `i == j`.
+- **Đường chéo phụ**: các ô có `i + j == n - 1`.
+### Duyệt 4 ô kề cạnh
+Rất hay dùng trong bài toán lưới, loang:
+```
+int dx[4] = {-1, 1, 0, 0};
+int dy[4] = {0, 0, -1, 1};
+for (int k = 0; k < 4; k++) {
+    int x = i + dx[k], y = j + dy[k];
+    if (x >= 0 && x < n && y >= 0 && y < m) { ... }
+}
+```
+</script>
+<script type="text/plain" id="t10">
+### Kiểu string
+```
+#include <string>
+string s = "Tin hoc";
+cout << s.size();     // 7 (tính cả dấu cách)
+cout << s[0];         // 'T' — ký tự đầu, chỉ số từ 0
+```
+### Nhập xâu
+- `cin >> s;` đọc **một từ** (dừng ở dấu cách).
+- `getline(cin, s);` đọc **cả dòng**.
+> Sau `cin >> n;` nếu muốn dùng `getline`, cần `cin.ignore();` để bỏ ký tự xuống dòng còn sót.
+### Các thao tác thường dùng
+- Nối xâu: `s + t`, `s += "abc"`.
+- So sánh: `s == t`, `s < t` (theo thứ tự từ điển).
+- `s.substr(vt, len)`: lấy xâu con.
+- `s.find("ab")`: tìm vị trí, không thấy trả về `string::npos`.
+- `s.erase(vt, len)`, `s.insert(vt, "x")`.
+### Xử lý từng ký tự
+```
+int demSo = 0;
+for (char c : s)
+    if (c >= '0' && c <= '9') demSo++;
+// chuyển ký tự số thành giá trị: '7' - '0' = 7
+// chữ thường → hoa: c - 'a' + 'A'  (hoặc toupper(c))
+```
+> Mỗi ký tự có một mã ASCII: 'A' = 65, 'a' = 97, '0' = 48.
+</script>
+<script type="text/plain" id="t11">
+### vector – mảng động
+`vector` tự thay đổi kích thước, không cần khai báo trước số phần tử.
+```
+#include <vector>
+vector<int> v;            // rỗng
+v.push_back(5);           // thêm vào cuối: {5}
+v.push_back(2);           // {5, 2}
+v.pop_back();             // xóa phần tử cuối: {5}
+cout << v.size();         // 1
+```
+- `vector<int> v(n);` — tạo n phần tử bằng 0.
+- `v.front()`, `v.back()` — phần tử đầu, cuối.
+- Duyệt: `for (int x : v) cout << x;`
+### Thư viện algorithm
+```
+#include <algorithm>
+sort(v.begin(), v.end());                    // tăng dần
+sort(v.begin(), v.end(), greater<int>());    // giảm dần
+reverse(v.begin(), v.end());                 // đảo ngược
+int mx = *max_element(v.begin(), v.end());   // giá trị lớn nhất
+int c = count(v.begin(), v.end(), 5);        // đếm số 5
+```
+- Với mảng thường: `sort(a, a + n);`
+- `sort` có độ phức tạp **O(n log n)**, sắp xếp 10^6 số chỉ mất khoảng 0,1 giây.
+> Tự viết sắp xếp nổi bọt O(n²) với n = 10^5 sẽ quá thời gian — luôn dùng `sort` của thư viện.
+</script>
+<script type="text/plain" id="t12">
+### struct – gom dữ liệu thành một bản ghi
+```
+struct HocSinh {
+    string ten;
+    double diem;
+};
+HocSinh h = {"An", 8.5};
+cout << h.ten << " " << h.diem;   // truy cập bằng dấu chấm
+HocSinh ds[100];                  // mảng 100 học sinh
+```
+### pair – cặp hai giá trị
+```
+pair<int, int> p = {3, 7};
+cout << p.first << " " << p.second;   // 3 7
+vector<pair<int,int>> v;
+v.push_back({2, 5});
+```
+Sắp xếp vector pair mặc định: theo `first` tăng dần, nếu bằng nhau thì theo `second` tăng dần.
+### Sắp xếp theo tiêu chí riêng (hàm so sánh)
+Hàm `cmp(a, b)` trả về `true` nếu **a phải đứng trước b**.
+```
+bool cmp(HocSinh a, HocSinh b) {
+    if (a.diem != b.diem) return a.diem > b.diem;  // điểm giảm dần
+    return a.ten < b.ten;                          // bằng điểm: tên tăng dần
+}
+sort(ds, ds + n, cmp);
+```
+> Đề thi thường yêu cầu sắp xếp nhiều tiêu chí. Hãy viết điều kiện **ưu tiên cao nhất trước**.
+</script>
+
+<script type="text/plain" id="t13">
+### Đệ quy là gì?
+Hàm **đệ quy** là hàm **tự gọi lại chính nó** với dữ liệu nhỏ hơn. Mỗi hàm đệ quy cần 2 phần:
+- **Điểm dừng** (trường hợp cơ sở): trả kết quả ngay, không gọi tiếp.
+- **Bước đệ quy**: đưa bài toán về bài toán nhỏ hơn cùng dạng.
+```
+long long gt(int n) {           // n! = n × (n-1)!
+    if (n == 0) return 1;       // điểm dừng
+    return n * gt(n - 1);       // bước đệ quy
+}
+```
+> Thiếu điểm dừng → hàm gọi mãi không dừng, chương trình bị lỗi **tràn ngăn xếp** (stack overflow).
+### Ngăn xếp lời gọi hàm
+Khi `gt(3)` gọi `gt(2)`, lời gọi `gt(3)` phải **chờ** cho đến khi `gt(2)` trả về. Các lời gọi xếp chồng lên nhau, lời gọi sau cùng được giải quyết **trước tiên**.
+### Đệ quy quay lui: sinh mọi khả năng
+```
+int n, x[20]; bool dd[20];
+void Try(int i) {                 // chọn phần tử thứ i
+    for (int v = 1; v <= n; v++)
+        if (!dd[v]) {
+            x[i] = v; dd[v] = true;
+            if (i == n) { for (int k = 1; k <= n; k++) cout << x[k]; cout << '\n'; }
+            else Try(i + 1);
+            dd[v] = false;           // quay lui: trả lại trạng thái
+        }
+}
+```
+Đoạn trên sinh mọi **hoán vị** của 1..n (có n! hoán vị).
+> Đệ quy Fibonacci `f(n) = f(n-1) + f(n-2)` viết trực tiếp chạy rất chậm vì tính lặp lại nhiều lần — sẽ được cải tiến bằng quy hoạch động (Bài 23).
+</script>
+<script type="text/plain" id="t14">
+### set – tập hợp có thứ tự, không trùng lặp
+```
+#include <set>
+set<int> s;
+s.insert(5); s.insert(1); s.insert(5);   // s = {1, 5}
+cout << s.size();                         // 2
+if (s.count(1)) cout << "Co 1";           // kiểm tra tồn tại
+s.erase(5);
+for (int x : s) cout << x << " ";         // duyệt theo thứ tự tăng
+```
+- Các thao tác `insert`, `erase`, `count`, `find` đều có độ phức tạp **O(log n)**.
+- Ứng dụng: loại phần tử trùng, đếm số giá trị khác nhau, tìm nhanh.
+### map – bảng tra cứu khóa → giá trị
+```
+#include <map>
+map<string, int> dem;
+dem["an"]++; dem["binh"]++; dem["an"]++;
+cout << dem["an"];                    // 2
+for (auto p : dem)                    // duyệt theo khóa tăng dần
+    cout << p.first << " " << p.second << '\n';
+```
+- `m[k]` nếu khóa k chưa có sẽ được **tự tạo** với giá trị 0.
+- Ứng dụng: đếm tần suất khi giá trị rất lớn (10^9) hoặc là xâu — không dùng mảng đếm được.
+> `unordered_set`, `unordered_map` nhanh hơn (trung bình O(1)) nhưng không giữ thứ tự.
+</script>
+<script type="text/plain" id="t15">
+### stack – ngăn xếp (LIFO)
+**Vào sau – ra trước** (Last In First Out), như chồng đĩa.
+```
+#include <stack>
+stack<int> st;
+st.push(1); st.push(2); st.push(3);
+cout << st.top();    // 3 — phần tử ở đỉnh
+st.pop();            // xóa 3
+cout << st.size();   // 2
+```
+### queue – hàng đợi (FIFO)
+**Vào trước – ra trước** (First In First Out), như xếp hàng mua vé.
+```
+#include <queue>
+queue<int> q;
+q.push(1); q.push(2); q.push(3);
+cout << q.front();   // 1 — người đứng đầu hàng
+q.pop();             // 1 rời hàng
+```
+> Luôn kiểm tra `st.empty()` / `q.empty()` trước khi gọi `top()`, `front()`, `pop()`.
+### Ứng dụng tiêu biểu
+- **stack**: kiểm tra dãy ngoặc hợp lệ, tính biểu thức, khử đệ quy.
+- **queue**: mô phỏng hàng đợi, **duyệt BFS** (Bài 24).
+- `priority_queue<int>`: hàng đợi ưu tiên, luôn lấy ra phần tử **lớn nhất** trong O(log n).
+### Thuật toán kiểm tra dãy ngoặc
+Duyệt từng ký tự: gặp ngoặc **mở** thì đẩy vào stack; gặp ngoặc **đóng** thì đỉnh stack phải là ngoặc mở **cùng loại**, rồi lấy ra. Cuối cùng stack phải **rỗng**.
+</script>
+<script type="text/plain" id="t16">
+### Đọc ghi tệp theo đề thi
+Đề thi thường yêu cầu đọc từ tệp `.INP` và ghi ra tệp `.OUT`. Chỉ cần thêm 2 dòng đầu hàm main, phần còn lại vẫn dùng `cin`, `cout`:
+```
+int main() {
+    freopen("DOIGIAY.INP", "r", stdin);
+    freopen("DOIGIAY.OUT", "w", stdout);
+    ios::sync_with_stdio(false); cin.tie(0);   // tăng tốc nhập xuất
+    ...
+}
+```
+> Sai tên tệp (sai chữ hoa/thường, sai phần mở rộng) là mất **toàn bộ điểm** bài đó. Hãy chép tên tệp từ đề.
+### Độ phức tạp thuật toán
+Độ phức tạp đo **số phép tính** theo kích thước dữ liệu n. Quy tắc ước lượng: máy chấm làm được khoảng **10^8 phép tính mỗi giây**.
+- Một vòng lặp 1..n → **O(n)**; hai vòng lồng nhau → **O(n²)**.
+- `sort`, `set`, `map` → **O(n log n)**; tìm kiếm nhị phân → **O(log n)**.
+### Chọn thuật toán theo giới hạn n (thời gian 1 giây)
+- n ≤ 20 → O(2^n) được (thử mọi tập con).
+- n ≤ 500 → O(n³).
+- n ≤ 5000 → O(n²).
+- n ≤ 10^6 → O(n log n) hoặc O(n).
+- n ≤ 10^18 → O(log n) hoặc O(√n) với n ≤ 10^12.
+### Kỹ thuật lấy điểm từng phần
+Đề HSG thường chia **subtask**: 50% test n nhỏ, 50% test n lớn. Nếu chưa nghĩ ra thuật toán tối ưu, hãy viết cách "trâu" để chắc chắn lấy điểm subtask nhỏ.
+</script>
+<script type="text/plain" id="t17">
+### Sắp xếp bằng thư viện
+```
+sort(a, a + n);              // a[0..n-1] tăng dần
+sort(a + 1, a + n + 1);      // a[1..n] khi mảng đánh số từ 1
+stable_sort(v.begin(), v.end(), cmp);   // giữ thứ tự cũ của phần tử bằng nhau
+```
+### Đếm phân phối (counting sort)
+Khi giá trị **nhỏ** (ví dụ 0 ≤ a[i] ≤ 10^6), đếm số lần xuất hiện của từng giá trị rồi in lại theo thứ tự — độ phức tạp **O(n + MAX)**, nhanh hơn `sort`.
+```
+int cnt[1000001];            // toàn cục, tự bằng 0
+for (int i = 0; i < n; i++) cnt[a[i]]++;
+for (int v = 0; v <= 1000000; v++)
+    for (int k = 0; k < cnt[v]; k++) cout << v << " ";
+```
+### Ứng dụng sau khi sắp xếp
+- Các giá trị bằng nhau **đứng liền nhau** → đếm số giá trị khác nhau: đếm vị trí i có `a[i] != a[i-1]`.
+- Phần tử nhỏ thứ k là `a[k-1]`.
+- Ghép cặp lớn với lớn, nhỏ với nhỏ trong bài tham lam.
+> Mảng `cnt` chỉ dùng được khi giá trị không âm và không quá lớn. Giá trị đến 10^9 → dùng `map` hoặc sắp xếp.
+</script>
+<script type="text/plain" id="t18">
+### Ước chung lớn nhất – Bội chung nhỏ nhất
+Thuật toán Euclid: `UCLN(a, b) = UCLN(b, a % b)`, dừng khi b = 0.
+```
+long long ucln(long long a, long long b) {
+    while (b != 0) { long long r = a % b; a = b; b = r; }
+    return a;
+}
+long long bcnn = a / ucln(a, b) * b;   // chia trước để tránh tràn số
+```
+C++17 có sẵn hàm `__gcd(a, b)` hoặc `gcd(a, b)`.
+### Kiểm tra số nguyên tố
+Thử chia cho i từ 2 đến √n: độ phức tạp O(√n).
+### Sàng Eratosthenes – tìm mọi số nguyên tố ≤ N
+```
+bool hop[1000001];                  // hop[x] = true: x là hợp số
+hop[0] = hop[1] = true;
+for (int p = 2; p * p <= N; p++)
+    if (!hop[p])
+        for (int k = p * p; k <= N; k += p) hop[k] = true;
+```
+- Bắt đầu gạch từ **p × p** vì các bội nhỏ hơn đã bị gạch bởi số nguyên tố nhỏ hơn.
+- Độ phức tạp **O(N log log N)** — gần như tuyến tính, sàng đến 10^7 vẫn nhanh.
+### Đếm ước
+Duyệt i từ 1 đến √n: nếu `n % i == 0` thì có 2 ước là i và n/i (cẩn thận khi i × i = n chỉ tính 1).
+</script>
+<script type="text/plain" id="t19">
+### Bài toán
+Cho dãy a[1..n] và q câu hỏi: tính tổng a[l] + … + a[r]. Cộng trực tiếp mỗi câu hỏi mất O(n) → tổng O(n·q), quá chậm khi n, q = 10^5.
+### Mảng cộng dồn (prefix sum)
+`S[i] = a[1] + a[2] + … + a[i]`, với `S[0] = 0`.
+```
+S[0] = 0;
+for (int i = 1; i <= n; i++) S[i] = S[i-1] + a[i];
+// tổng đoạn [l, r]:
+cout << S[r] - S[l-1];
+```
+Chuẩn bị O(n), mỗi câu hỏi O(1) → tổng **O(n + q)**.
+> Dùng chỉ số **từ 1** và đặt `S[0] = 0` để công thức đúng cả khi l = 1. Tổng có thể lớn → khai báo S kiểu `long long`.
+### Mảng hiệu – cộng một đoạn nhiều lần
+Muốn cộng v vào tất cả a[l..r] nhiều lần, chỉ ghi lại ở 2 đầu mút:
+```
+d[l] += v;  d[r + 1] -= v;
+// cuối cùng: a[i] = a[i-1] + d[i]   (cộng dồn mảng d)
+```
+### Mở rộng 2 chiều
+`S[i][j] = S[i-1][j] + S[i][j-1] - S[i-1][j-1] + a[i][j]` — tính tổng hình chữ nhật trong O(1).
+</script>
+<script type="text/plain" id="t20">
+### Ý tưởng
+Trên mảng **đã sắp xếp**, so sánh x với phần tử **ở giữa**: nếu x lớn hơn thì bỏ nửa trái, nhỏ hơn thì bỏ nửa phải. Mỗi bước loại một nửa → **O(log n)**: 10^6 phần tử chỉ cần khoảng 20 lần so sánh.
+```
+int lo = 0, hi = n - 1;
+while (lo <= hi) {
+    int mid = (lo + hi) / 2;
+    if (a[mid] == x) return mid;
+    else if (a[mid] < x) lo = mid + 1;
+    else hi = mid - 1;
+}
+return -1;   // không tìm thấy
+```
+### Hàm có sẵn
+- `lower_bound(a, a + n, x) - a`: vị trí đầu tiên có `a[i] >= x`.
+- `upper_bound(a, a + n, x) - a`: vị trí đầu tiên có `a[i] > x`.
+- Số phần tử bằng x = `upper_bound - lower_bound`.
+### Chặt nhị phân kết quả
+Khi đề hỏi "giá trị nhỏ nhất/lớn nhất thỏa điều kiện" và điều kiện có tính **đơn điệu** (đúng với k thì cũng đúng với mọi giá trị lớn hơn k), ta chặt nhị phân trên đáp án:
+```
+long long lo = 0, hi = 1e18, ans = -1;
+while (lo <= hi) {
+    long long mid = lo + (hi - lo) / 2;
+    if (check(mid)) { ans = mid; hi = mid - 1; }
+    else lo = mid + 1;
+}
+```
+> Lỗi hay gặp: quên sắp xếp mảng trước khi tìm kiếm nhị phân; vòng lặp vô hạn do cập nhật `lo = mid` thay vì `mid + 1`.
+</script>
+<script type="text/plain" id="t21">
+### Hai con trỏ
+Dùng hai chỉ số i, j cùng di chuyển **một chiều** trên mảng, mỗi con trỏ đi tối đa n bước → **O(n)** thay vì O(n²).
+### Bài mẫu: tìm cặp có tổng bằng X (mảng đã sắp xếp)
+```
+int i = 0, j = n - 1;
+while (i < j) {
+    int t = a[i] + a[j];
+    if (t == X) { cout << a[i] << " " << a[j]; break; }
+    else if (t < X) i++;     // tổng nhỏ → tăng phần tử trái
+    else j--;                // tổng lớn → giảm phần tử phải
+}
+```
+### Cửa sổ trượt độ dài k
+Tổng đoạn mới = tổng đoạn cũ **+ phần tử vào − phần tử ra**:
+```
+long long s = 0;
+for (int i = 0; i < k; i++) s += a[i];
+long long best = s;
+for (int i = k; i < n; i++) {
+    s += a[i] - a[i - k];
+    best = max(best, s);
+}
+```
+### Đoạn con dài nhất có tổng ≤ S (các số dương)
+Mở rộng đầu phải r; khi tổng vượt S thì **tăng đầu trái l** đến khi tổng ≤ S lại.
+```
+long long s = 0; int l = 0, best = 0;
+for (int r = 0; r < n; r++) {
+    s += a[r];
+    while (s > S) s -= a[l++];
+    best = max(best, r - l + 1);
+}
+```
+</script>
+<script type="text/plain" id="t22">
+### Tham lam là gì?
+Ở mỗi bước, chọn phương án **tốt nhất trước mắt** và không quay lại. Thuật toán tham lam thường **ngắn và nhanh**, nhưng **không phải lúc nào cũng đúng** — cần kiểm tra bằng phản ví dụ.
+### Ví dụ 1: đổi tiền
+Với mệnh giá tiền Việt Nam (1, 2, 5, 10, 20, 50…), chọn tờ **lớn nhất có thể** luôn cho số tờ ít nhất. Nhưng với mệnh giá {1, 3, 4} và số tiền 6: tham lam chọn 4 + 1 + 1 (3 tờ), còn tối ưu là 3 + 3 (2 tờ).
+### Ví dụ 2: chọn nhiều hoạt động nhất
+Có n hoạt động [bắt đầu, kết thúc], chọn nhiều hoạt động không chồng lên nhau nhất: **sắp xếp theo thời điểm kết thúc tăng dần**, lần lượt chọn hoạt động bắt đầu sau khi hoạt động vừa chọn kết thúc.
+```
+sort(hd, hd + n, [](pair<int,int> a, pair<int,int> b) {
+    return a.second < b.second;            // kết thúc sớm trước
+});
+int dem = 0, ketThuc = -1;
+for (int i = 0; i < n; i++)
+    if (hd[i].first >= ketThuc) { dem++; ketThuc = hd[i].second; }
+```
+### Ví dụ 3: mua được nhiều món nhất
+Có M đồng, mua nhiều món nhất → sắp xếp giá tăng dần, mua món **rẻ trước**.
+> Tham lam gần như luôn đi kèm **sắp xếp**. Trong phòng thi, nếu không chắc tham lam đúng, hãy thử vài phản ví dụ nhỏ bằng tay.
+</script>
+<script type="text/plain" id="t23">
+### Quy hoạch động (QHĐ)
+Giải bài toán lớn từ các **bài toán con nhỏ hơn**, **lưu kết quả** vào mảng để không tính lại. Các bước:
+- Định nghĩa **trạng thái**: `dp[i]` nghĩa là gì?
+- Tìm **công thức truy hồi**: dp[i] tính từ các dp nhỏ hơn thế nào?
+- Xác định **cơ sở** và **thứ tự tính**, rồi lấy **đáp án**.
+### Ví dụ 1: leo cầu thang
+Mỗi bước leo 1 hoặc 2 bậc, có bao nhiêu cách leo n bậc? Bậc thứ i đến từ bậc i−1 hoặc i−2:
+```
+f[1] = 1; f[2] = 2;
+for (int i = 3; i <= n; i++) f[i] = f[i-1] + f[i-2];
+```
+### Ví dụ 2: dãy con tăng dài nhất (LIS)
+`dp[i]` = độ dài dãy con tăng dài nhất **kết thúc tại a[i]**.
+```
+for (int i = 0; i < n; i++) {
+    dp[i] = 1;
+    for (int j = 0; j < i; j++)
+        if (a[j] < a[i]) dp[i] = max(dp[i], dp[j] + 1);
+}
+// đáp án = giá trị lớn nhất trong dp
+```
+### Ví dụ 3: cái túi 0/1
+n đồ vật (khối lượng w, giá trị v), túi chứa tối đa W. `dp[j]` = giá trị lớn nhất với tổng khối lượng ≤ j:
+```
+for (int i = 0; i < n; i++)
+    for (int j = W; j >= w[i]; j--)      // j giảm dần: mỗi đồ chỉ lấy 1 lần
+        dp[j] = max(dp[j], dp[j - w[i]] + v[i]);
+```
+> So với đệ quy thuần (hàm mũ), QHĐ chỉ tốn O(số trạng thái × chi phí chuyển).
+</script>
+<script type="text/plain" id="t24">
+### Biểu diễn lưới và đồ thị
+Bài toán lưới: mỗi ô là một **đỉnh**, hai ô kề cạnh được nối với nhau. Đồ thị tổng quát lưu bằng **danh sách kề**: `vector<int> ke[N];`.
+### BFS – duyệt theo chiều rộng
+Duyệt **từng lớp** từ điểm xuất phát bằng **queue** → tìm **đường đi ngắn nhất** trên lưới/đồ thị không trọng số.
+```
+queue<pair<int,int>> q;
+memset(d, -1, sizeof d);         // -1: chưa thăm
+d[sx][sy] = 0; q.push({sx, sy});
+while (!q.empty()) {
+    auto [x, y] = q.front(); q.pop();
+    for (int k = 0; k < 4; k++) {
+        int u = x + dx[k], v = y + dy[k];
+        if (u >= 0 && u < n && v >= 0 && v < m && a[u][v] != '#' && d[u][v] == -1) {
+            d[u][v] = d[x][y] + 1;
+            q.push({u, v});
+        }
+    }
+}
+```
+### DFS – duyệt theo chiều sâu
+Đi sâu hết mức rồi mới quay lại, viết bằng **đệ quy**. Thường dùng để **đếm vùng liên thông**:
+```
+void dfs(int x, int y) {
+    vis[x][y] = true;
+    for (int k = 0; k < 4; k++) {
+        int u = x + dx[k], v = y + dy[k];
+        if (u >= 0 && u < n && v >= 0 && v < m && a[u][v] == '.' && !vis[u][v]) dfs(u, v);
+    }
+}
+// số vùng = số lần phải gọi dfs từ một ô chưa thăm
+```
+> Luôn có mảng **đánh dấu đã thăm** (d hoặc vis) để không thăm một ô hai lần. Độ phức tạp O(n × m).
+</script>
+<script>
+const CH2=[[13,'Đệ quy',['Viết hàm đệ quy có điểm dừng','Hiểu ngăn xếp lời gọi hàm','Sinh hoán vị bằng quay lui'],'Chương 13'],
+[14,'set và map',['Dùng set để loại trùng, tìm nhanh','Dùng map để đếm tần suất','Biết độ phức tạp O(log n)'],'Chương 14'],
+[15,'stack và queue',['Phân biệt LIFO và FIFO','Kiểm tra dãy ngoặc bằng stack','Biết ứng dụng queue trong BFS'],'Chương 14'],
+[16,'Đọc ghi tệp, độ phức tạp',['Đọc ghi tệp đúng quy định đề thi','Ước lượng độ phức tạp','Chọn thuật toán theo giới hạn n'],'Chương 17'],
+[17,'Sắp xếp và đếm phân phối',['Sắp xếp đoạn mảng, sắp xếp ổn định','Dùng đếm phân phối khi giá trị nhỏ'],'Chuyên đề'],
+[18,'Số học: UCLN, số nguyên tố',['Tính UCLN, BCNN bằng Euclid','Sàng Eratosthenes','Đếm ước trong O(√n)'],'Chuyên đề'],
+[19,'Mảng cộng dồn, mảng hiệu',['Xây dựng mảng cộng dồn','Trả lời tổng đoạn trong O(1)','Cộng một đoạn bằng mảng hiệu'],'Chuyên đề'],
+[20,'Tìm kiếm nhị phân',['Tìm kiếm trên mảng đã sắp xếp','Dùng lower_bound, upper_bound','Chặt nhị phân kết quả'],'Chuyên đề'],
+[21,'Hai con trỏ, cửa sổ trượt',['Giải bài tìm cặp trong O(n)','Dùng cửa sổ trượt tính tổng đoạn'],'Chuyên đề'],
+[22,'Tham lam',['Hiểu ý tưởng tham lam','Biết dùng phản ví dụ kiểm tra','Giải bài chọn hoạt động'],'Chuyên đề'],
+[23,'Quy hoạch động',['Xác định trạng thái và công thức truy hồi','Giải bài leo cầu thang, LIS, cái túi'],'Chuyên đề'],
+[24,'Đồ thị: BFS, DFS trên lưới',['Tìm đường đi ngắn nhất bằng BFS','Đếm vùng liên thông bằng DFS'],'Chuyên đề']];
+
+const VIZ2={
+13:{t:'Ngăn xếp lời gọi đệ quy: tính n!',f(h){Tracer(h,{inputs:[{id:'n',label:'n =',val:'4',w:60}],
+ code:['long long gt(int n) {','    if (n == 0) return 1;','    return n * gt(n - 1);','}','int main() {','    cout << gt(N);','}'],
+ gen(v){const N=num(v.n,0,7);if(N===null)return'Nhập n từ 0 đến 7.';const {steps,P,O}=mk();const F={};const V=()=>F;
+  P(5,`main gọi **gt(${N})**.`,V());
+  for(let k=N;k>=0;k--){F[`gt(${k})`]=`n = ${k}`;P(0,`Vào lời gọi gt(${k}) — đặt lên đỉnh ngăn xếp.`,V());const z=k===0;P(1,`Kiểm tra \`${k} == 0\` → ${z?'**đúng: điểm dừng**':'sai'}.`,V());
+   if(z){F['gt(0)']='trả về 1';P(1,'gt(0) **trả về 1** ngay, không gọi tiếp.',V())}else{F[`gt(${k})`]=`chờ ${k} × gt(${k-1})`;P(2,`Cần tính ${k} × gt(${k-1}) → gọi gt(${k-1}); gt(${k}) phải **chờ**.`,V())}}
+  let r=1;for(let k=1;k<=N;k++){delete F[`gt(${k-1})`];const o=r;r*=k;F[`gt(${k})`]=`trả về ${r}`;P(2,`gt(${k-1}) trả về ${o} và bị xóa khỏi ngăn xếp → gt(${k}) = ${k} × ${o} = **${r}**.`,V())}
+  delete F[`gt(${N})`];O(String(r));P(5,`Ngăn xếp rỗng, main in ${N}! = ${r}.`,V());return steps}})}},
+14:{t:'set và map trên cùng một dãy số',f(h){
+ h.innerHTML=`<div class="row"><label class="lab">Dãy a = <input id="a14" value="5 3 8 3 5 5 1" style="width:240px"></label><label class="lab">x = <input id="x14" value="5" style="width:70px"></label></div><div id="r14"></div>`;
+ function u(){const a=$('#a14',h).value.trim().split(/[\s,]+/).map(Number).filter(Number.isFinite).slice(0,20),x=Number($('#x14',h).value);const st=[...new Set(a)].sort((p,q)=>p-q);const m={};a.forEach(v=>m[v]=(m[v]||0)+1);
+  $('#r14',h).innerHTML=`<pre class="code">${hl('set<int> s;  map<int,int> m;\nfor (int x : a) { s.insert(x); m[x]++; }')}</pre>
+  <div class="lab">Dãy ban đầu (${a.length} phần tử):</div><div class="arr">${a.map((v,i)=>`<div class="cell ${v===x?'mk':''}">${v}<small>[${i}]</small></div>`).join('')}</div>
+  <div class="lab">set s — tự sắp tăng dần, bỏ trùng: <b>s.size() = ${st.length}</b></div><div class="arr">${st.map(v=>`<div class="cell hi ${v===x?'mk':''}">${v}</div>`).join('')}</div>
+  <div class="lab">map m — đếm số lần xuất hiện:</div><table class="tbl" style="max-width:360px"><tr><th>khóa (first)</th><th>giá trị (second)</th></tr>${st.map(v=>`<tr style="${v===x?'background:#fef3c7':''}"><td class="mono">${v}</td><td class="mono">${m[v]}</td></tr>`).join('')}</table>
+  <div class="note"><code>s.count(${x})</code> = <b>${st.includes(x)?1:0}</b> · <code>m[${x}]</code> = <b>${m[x]||0}</b>${m[x]?'':' (khóa chưa có nên m tự tạo với giá trị 0)'}</div>`}
+ h.addEventListener('input',u);u();}},
+15:{t:'Ngăn xếp, hàng đợi và bài kiểm tra dãy ngoặc',f(h){
+ let st=[1,2],q=[1,2],n=3;h.innerHTML=`<div class="row"><button class="b" data-o="sp">st.push(${'x'})</button><button class="b" data-o="so">st.pop()</button><button class="b" data-o="qp">q.push(x)</button><button class="b" data-o="qo">q.pop()</button><span class="lab">x tự tăng: lần đẩy tiếp theo là <b id="nx">3</b></span></div><div id="sq"></div><h3>Chạy từng bước: kiểm tra dãy ngoặc</h3><div id="br"></div>`;
+ function d(m){$('#nx',h).textContent=n;$('#sq',h).innerHTML=`<div class="lab">stack st — đỉnh ở bên phải (top = <b>${st.length?st[st.length-1]:'rỗng'}</b>)</div><div class="arr">${st.map((x,i)=>`<div class="cell ${i===st.length-1?'hi':''}">${x}</div>`).join('')||'<i class="lab">(rỗng)</i>'}</div><div class="lab">queue q — đầu hàng ở bên trái (front = <b>${q.length?q[0]:'rỗng'}</b>)</div><div class="arr">${q.map((x,i)=>`<div class="cell ${i===0?'mk':''}">${x}</div>`).join('')||'<i class="lab">(rỗng)</i>'}</div>${m?`<div class="note">${m}</div>`:''}`}
+ $('.row',h).onclick=e=>{const o=e.target.dataset.o;if(!o)return;let m='';
+  if(o==='sp'){if(st.length<10){st.push(n++);m='push: thêm vào <b>đỉnh</b>.'}}if(o==='qp'){if(q.length<10){q.push(n++);m='push: thêm vào <b>cuối hàng</b>.'}}
+  if(o==='so')m=st.length?`pop: lấy ra ${st.pop()} — phần tử vào <b>sau cùng</b> ra trước (LIFO).`:'⚠️ stack rỗng, gọi pop() sẽ lỗi!';
+  if(o==='qo')m=q.length?`pop: lấy ra ${q.shift()} — phần tử vào <b>đầu tiên</b> ra trước (FIFO).`:'⚠️ queue rỗng, gọi pop() sẽ lỗi!';d(m)};d();
+ const pair={')':'(',']':'['};
+ Tracer($('#br',h),{inputs:[{id:'s',label:'s =',val:'([()])[',w:180}],code:['stack<char> st;','for (char c : s) {',"    if (c == '(' || c == '[') st.push(c);",'    else {','        if (st.empty() || st.top() != moNgoac(c))','            { cout << "NO"; return 0; }','        st.pop();','    }','}','cout << (st.empty() ? "YES" : "NO");'],
+ gen(v){const s=v.s.trim();if(!/^[()[\]]{1,16}$/.test(s))return'Chỉ nhập các ký tự ( ) [ ], tối đa 16 ký tự.';const {steps,P,O}=mk();const S=[];const X=()=>({arr:[...S],hi:S.length-1,l1:'Ngăn xếp st (đỉnh bên phải):'});P(0,'Tạo ngăn xếp rỗng.',{},X());
+  for(let i=0;i<s.length;i++){const c=s[i];P(1,`Xét c = s[${i}] = '${c}'.`,{c},X());
+   if(c==='('||c==='['){S.push(c);P(2,`Ngoặc mở → **đẩy vào** stack.`,{c},X())}
+   else{const ok=S.length&&S[S.length-1]===pair[c];P(4,S.length?`Đỉnh là '${S[S.length-1]}', cần '${pair[c]}' → ${ok?'**khớp**':'**không khớp**'}.`:'Stack **rỗng** mà gặp ngoặc đóng!',{c},X());
+    if(!ok){O('NO');P(5,'In NO và kết thúc.',{c},X());return steps}S.pop();P(6,'Lấy ngoặc mở khỏi đỉnh.',{c},X())}}
+  const y=!S.length;O(y?'YES':'NO');P(9,y?'Duyệt hết, stack rỗng → **YES**.':`Duyệt hết nhưng còn ${S.length} ngoặc mở chưa đóng → **NO**.`,{},X());return steps}});}},
+16:{t:'Ước lượng thời gian chạy theo độ phức tạp',f(h){
+ h.innerHTML=`<div class="row"><label class="lab">Kích thước dữ liệu n = <select id="n16">${['20','100','500','5000','100000','1000000','1000000000','1000000000000000000'].map(x=>`<option ${x==='100000'?'selected':''} value="${x}">${Number(x).toLocaleString('vi-VN')}</option>`).join('')}</select></label><span class="lab">Giả sử máy chấm chạy 10^8 phép tính/giây, giới hạn 1 giây.</span></div><table class="tbl" id="t16"></table>`;
+ const F=[['O(log n)',n=>Math.log2(n)],['O(√n)',n=>Math.sqrt(n)],['O(n)',n=>n],['O(n log n)',n=>n*Math.log2(n)],['O(n√n)',n=>n*Math.sqrt(n)],['O(n²)',n=>n*n],['O(n³)',n=>n**3],['O(2ⁿ)',n=>2**n]];
+ const fmt=x=>!isFinite(x)||x>1e30?'quá lớn':x<1e4?Math.round(x).toLocaleString('vi-VN'):'≈ 10^'+Math.log10(x).toFixed(1);
+ function u(){const n=Number($('#n16',h).value);$('#t16',h).innerHTML='<tr><th>Độ phức tạp</th><th>Số phép tính</th><th>Thời gian ước tính</th><th>Kết luận</th></tr>'+F.map(([k,f])=>{const o=f(n),t=o/1e8;const v=o<=1e8?['ok','✔ Kịp thời gian']:o<=1e9?['','⚠ Sát giới hạn']:['bad','✘ Quá thời gian'];
+  return `<tr><td class="mono"><b>${k}</b></td><td class="mono">${fmt(o)}</td><td>${!isFinite(t)||t>1e9?'nhiều năm':t<0.001?'< 1 ms':t<1?(t*1000).toFixed(0)+' ms':t<3600?t.toFixed(1)+' giây':t<86400*365?(t/3600).toFixed(0)+' giờ':'nhiều năm'}</td><td class="${v[0]}">${v[1]}</td></tr>`}).join('')}
+ $('#n16',h).onchange=u;u();}},
+17:{t:'Chạy từng bước sắp xếp bằng đếm phân phối',f(h){Tracer(h,{inputs:[{id:'a',label:'Dãy a (các số 0–9) =',val:'3 1 4 1 5 9 2 6 5 3',w:220}],
+ code:['int cnt[10] = {0};','for (int i = 0; i < n; i++) cnt[a[i]]++;','for (int v = 0; v < 10; v++)','    for (int k = 0; k < cnt[v]; k++)','        cout << v << " ";'],
+ gen(v){const a=v.a.trim().split(/[\s,]+/).map(Number);if(!a.length||a.length>12||a.some(x=>!Number.isInteger(x)||x<0||x>9))return'Nhập 1–12 số nguyên từ 0 đến 9.';
+  const {steps,P,O}=mk(),c=Array(10).fill(0);const X=(hi,h2)=>({arr:a,hi,arr2:[...c],hi2:h2,l1:'Mảng a:',l2:'Mảng đếm cnt[0..9]:'});P(0,'Mảng đếm cnt toàn số 0.',{},X(-1,-1));
+  a.forEach((x,i)=>{c[x]++;P(1,`a[${i}] = ${x} → \`cnt[${x}]++\` thành ${c[x]}.`,{i},X(i,x))});
+  for(let w=0;w<10;w++){if(!c[w]){P(2,`v = ${w}: cnt[${w}] = 0, không in gì.`,{v:w},X(-1,w));continue}for(let k=0;k<c[w];k++){O(w+' ');P(4,`v = ${w}: in ${w} (lần ${k+1}/${c[w]}).`,{v:w,k},X(-1,w))}}
+  P(4,'Xong! Dãy đã được in theo thứ tự tăng dần mà **không cần so sánh** hai phần tử nào.',{},X(-1,-1));return steps}})}},
+18:{t:'Sàng Eratosthenes và thuật toán Euclid',f(h){
+ let N=100,hop,p,cur,newly;h.innerHTML=`<div class="row"><label class="lab">N = <select id="N18"><option>50</option><option selected>100</option><option>150</option></select></label><button class="b pri" id="nx18">Bước tiếp ▶</button><button class="b" id="rs18">⟲ Đặt lại</button></div><div class="tnote" id="m18"></div><div id="g18" style="display:grid;grid-template-columns:repeat(10,minmax(0,52px));gap:4px;margin:10px 0"></div>
+ <h3>Thuật toán Euclid</h3><div class="row"><label class="lab">a = <input id="ea" value="84" style="width:90px"></label><label class="lab">b = <input id="eb" value="36" style="width:90px"></label></div><div id="e18"></div>`;
+ function reset(){N=+$('#N18',h).value;hop=Array(N+1).fill(false);p=1;cur=0;newly=[];draw('Bấm <b>Bước tiếp</b>: tìm số nguyên tố p tiếp theo chưa bị gạch, rồi gạch các bội của p bắt đầu từ p × p.')}
+ function step(){let q=p+1;while(q*q<=N&&hop[q])q++;if(q*q>N){cur=0;newly=[];const c=[...Array(N+1).keys()].filter(x=>x>=2&&!hop[x]).length;p=N;draw(`p = ${q} có p × p = ${q*q} > ${N} → <b>dừng</b>. Các số còn lại đều nguyên tố: có <b>${c}</b> số nguyên tố ≤ ${N}.`);return}
+  p=q;cur=q;newly=[];for(let k=q*q;k<=N;k+=q)if(!hop[k]){hop[k]=true;newly.push(k)}draw(`p = <b>${q}</b> là số nguyên tố. Gạch các bội từ ${q} × ${q} = ${q*q}: gạch mới ${newly.length} số (ô đỏ).`)}
+ function draw(m){$('#m18',h).innerHTML=m;let g='';for(let x=1;x<=N;x++){const cls=x===1?'dim':x===cur?'mk':newly.includes(x)?'no':hop[x]?'dim':(p>=N&&x>=2?'hi':'');g+=`<div class="cell ${cls}" style="min-width:0;${cls==='no'?'border-color:#ef4444;background:#fee2e2;text-decoration:line-through':''}${cls==='dim'?';text-decoration:line-through':''}">${x}</div>`}$('#g18',h).innerHTML=g}
+ $('#nx18',h).onclick=()=>{if(p<N)step()};$('#rs18',h).onclick=reset;$('#N18',h).onchange=reset;reset();
+ function eu(){let a=num($('#ea',h).value,1,1e9),b=num($('#eb',h).value,0,1e9);if(a===null||b===null){$('#e18',h).innerHTML='<span class="bad">Nhập số nguyên dương.</span>';return}const A=a,B=b;let r='';while(b){r+=`<tr><td class="mono">${a}</td><td class="mono">${b}</td><td class="mono">${a} % ${b} = ${a%b}</td></tr>`;[a,b]=[b,a%b]}
+  $('#e18',h).innerHTML=`<table class="tbl" style="max-width:480px"><tr><th>a</th><th>b</th><th>r = a % b</th></tr>${r}<tr><td class="mono"><b>${a}</b></td><td class="mono">0</td><td>b = 0 → dừng</td></tr></table><div class="note">UCLN(${A}, ${B}) = <b>${a}</b> · BCNN = ${A} / ${a} × ${B} = <b>${A/a*B}</b> · chỉ mất ${r.split('<tr>').length-1} bước.</div>`}
+ h.querySelectorAll('#ea,#eb').forEach(e=>e.oninput=eu);eu();}},
+19:{t:'Tổng đoạn bằng mảng cộng dồn',f(h){
+ h.innerHTML=`<div class="row"><label class="lab">a[1..n] = <input id="a19" value="3 -1 4 1 5 9 2 6" style="width:240px"></label><label class="lab">l = <input id="l19" value="3" style="width:60px"></label><label class="lab">r = <input id="r19" value="6" style="width:60px"></label></div><div id="o19"></div>`;
+ function u(){const a=$('#a19',h).value.trim().split(/[\s,]+/).map(Number).filter(Number.isFinite).slice(0,14),n=a.length,l=num($('#l19',h).value,1,n),r=num($('#r19',h).value,1,n);const S=[0];a.forEach((x,i)=>S.push(S[i]+x));
+  if(l===null||r===null||l>r){$('#o19',h).innerHTML=`<span class="bad">Cần 1 ≤ l ≤ r ≤ ${n}.</span>`;return}
+  const cell=(x,i,c)=>`<div class="cell ${c}">${x}<small>[${i}]</small></div>`;
+  $('#o19',h).innerHTML=`<div class="lab">Mảng a (chỉ số từ 1) — đoạn [${l}, ${r}] tô xanh:</div><div class="arr"><div class="cell dim">—<small>[0]</small></div>${a.map((x,i)=>cell(x,i+1,i+1>=l&&i+1<=r?'hi':'')).join('')}</div>
+  <div class="lab">Mảng cộng dồn S, S[i] = S[i−1] + a[i]:</div><div class="arr">${S.map((x,i)=>cell(x,i,i===r?'hi':i===l-1?'mk':'')).join('')}</div>
+  <pre class="code">${hl(`cout << S[${r}] - S[${l-1}];   // ${S[r]} - ${S[l-1]}`)}</pre><div class="note">Tổng a[${l}] + … + a[${r}] = S[${r}] − S[${l-1}] = <b>${S[r]-S[l-1]}</b> — chỉ <b>1 phép trừ</b> thay vì ${r-l} phép cộng.</div>`}
+ h.addEventListener('input',u);u();}},
+20:{t:'Chạy từng bước tìm kiếm nhị phân',f(h){Tracer(h,{inputs:[{id:'a',label:'Mảng (tự sắp xếp) =',val:'2 5 8 12 16 23 38 56 72 91',w:240},{id:'x',label:'x =',val:'23',w:60}],
+ code:['int lo = 0, hi = n - 1;','while (lo <= hi) {','    int mid = (lo + hi) / 2;','    if (a[mid] == x) { cout << mid; return 0; }','    else if (a[mid] < x) lo = mid + 1;','    else hi = mid - 1;','}','cout << -1;'],
+ gen(v){const a=v.a.trim().split(/[\s,]+/).map(Number).sort((p,q)=>p-q),x=Number(v.x);if(!a.length||a.length>16||a.some(t=>!Number.isInteger(t))||!Number.isInteger(x))return'Nhập 1–16 số nguyên và x nguyên.';
+  const {steps,P,O}=mk();let lo=0,hi=a.length-1,c=0;const X=(m)=>({arr:a,hi:m,rg:[lo,hi],l1:'Vùng còn tìm (ô mờ đã bị loại):'});P(0,`Vùng tìm kiếm ban đầu [${lo}, ${hi}].`,{lo,hi},X(-1));
+  while(true){const ok=lo<=hi;P(1,`\`${lo} <= ${hi}\` → ${ok?'còn phần tử để tìm':'**hết vùng tìm kiếm**'}.`,{lo,hi},X(-1));if(!ok)break;c++;
+   const mid=Math.floor((lo+hi)/2);P(2,`mid = (${lo} + ${hi}) / 2 = **${mid}**, a[mid] = ${a[mid]}.`,{lo,hi,mid},X(mid));
+   if(a[mid]===x){O(String(mid));P(3,`a[${mid}] = ${x} → **tìm thấy** sau ${c} lần so sánh!`,{lo,hi,mid},X(mid));return steps}
+   if(a[mid]<x){lo=mid+1;P(4,`${a[mid]} < ${x} → bỏ nửa trái, lo = ${lo}.`,{lo,hi,mid},X(mid))}else{hi=mid-1;P(5,`${a[mid]} > ${x} → bỏ nửa phải, hi = ${hi}.`,{lo,hi,mid},X(mid))}}
+  O('-1');P(7,`Không có ${x} trong mảng. Chỉ mất ${c} lần so sánh.`,{lo,hi},X(-1));return steps}})}},
+21:{t:'Chạy từng bước hai con trỏ: tìm cặp có tổng X',f(h){Tracer(h,{inputs:[{id:'a',label:'Mảng (tự sắp xếp) =',val:'1 3 4 6 8 11 14',w:220},{id:'x',label:'X =',val:'17',w:60}],
+ code:['int i = 0, j = n - 1;','while (i < j) {','    int t = a[i] + a[j];','    if (t == X) { cout << a[i] << " " << a[j]; break; }','    else if (t < X) i++;','    else j--;','}'],
+ gen(v){const a=v.a.trim().split(/[\s,]+/).map(Number).sort((p,q)=>p-q),X=Number(v.x);if(a.length<2||a.length>14||a.some(t=>!Number.isInteger(t)))return'Nhập 2–14 số nguyên.';
+  const {steps,P,O}=mk();let i=0,j=a.length-1;const Y=()=>({arr:a,hi:i,mk:j,rg:[i,j],l1:'Ô xanh: con trỏ i · ô vàng: con trỏ j'});P(0,`i ở đầu trái, j ở đầu phải.`,{i,j},Y());
+  while(true){const ok=i<j;P(1,`\`${i} < ${j}\` → ${ok?'tiếp tục':'**hai con trỏ gặp nhau, dừng**'}.`,{i,j},Y());if(!ok){P(6,`Không có cặp nào có tổng ${X}.`,{i,j},Y());break}
+   const t=a[i]+a[j];P(2,`t = a[${i}] + a[${j}] = ${a[i]} + ${a[j]} = **${t}**.`,{i,j,t},Y());
+   if(t===X){O(`${a[i]} ${a[j]}`);P(3,`t = X → **tìm thấy** cặp (${a[i]}, ${a[j]}).`,{i,j,t},Y());break}
+   if(t<X){i++;P(4,`${t} < ${X}: tổng nhỏ → tăng i (mọi cặp với a[${i-1}] đều quá nhỏ).`,{i,j,t},Y())}else{j--;P(5,`${t} > ${X}: tổng lớn → giảm j.`,{i,j,t},Y())}}
+  return steps}})}},
+22:{t:'Đổi tiền: tham lam có luôn tối ưu?',f(h){
+ h.innerHTML=`<div class="row"><label class="lab">Mệnh giá = <input id="c22" value="1 3 4" style="width:200px"></label><label class="lab">Số tiền = <input id="m22" value="6" style="width:80px"></label><button class="b" data-p="1 2 5 10 20 50">Mệnh giá kiểu VN</button><button class="b" data-p="1 3 4">Bộ {1, 3, 4}</button></div><div id="o22"></div>`;
+ function u(){const c=[...new Set($('#c22',h).value.trim().split(/[\s,]+/).map(Number).filter(x=>Number.isInteger(x)&&x>0))].sort((a,b)=>b-a),M=num($('#m22',h).value,1,500);if(!c.length||M===null){$('#o22',h).innerHTML='<span class="bad">Nhập mệnh giá dương và số tiền 1–500.</span>';return}
+  let r=M,g=[],rows='';for(const x of c){const k=Math.floor(r/x);if(k){rows+=`<tr><td class="mono">${x}</td><td>${k} tờ</td><td>còn ${r-k*x}</td></tr>`;for(let t=0;t<k;t++)g.push(x);r-=k*x}}
+  const dp=Array(M+1).fill(Infinity),tr=Array(M+1).fill(0);dp[0]=0;for(let s=1;s<=M;s++)for(const x of c)if(x<=s&&dp[s-x]+1<dp[s]){dp[s]=dp[s-x]+1;tr[s]=x}
+  let opt=[];if(isFinite(dp[M])){let s=M;while(s){opt.push(tr[s]);s-=tr[s]}}
+  const same=r===0&&g.length===opt.length;
+  $('#o22',h).innerHTML=`<div class="tr-grid"><div><h3>Tham lam: lấy tờ lớn nhất có thể</h3><table class="tbl"><tr><th>Mệnh giá</th><th>Lấy</th><th>Tiền còn lại</th></tr>${rows}</table><div class="note">${r?`❌ Còn dư ${r} đồng, tham lam <b>không đổi được</b>.`:`Tham lam: <b>${g.length} tờ</b> (${g.join(' + ')})`}</div></div>
+  <div><h3>Tối ưu (quy hoạch động)</h3><div class="note">${opt.length?`Ít nhất: <b>${opt.length} tờ</b> (${opt.sort((a,b)=>b-a).join(' + ')})`:'Không có cách đổi.'}</div><div class="score" style="background:${same?'var(--okb)':'var(--badb)'};color:${same?'var(--ok)':'var(--bad)'}">${same?'✔ Tham lam cho kết quả tối ưu với dữ liệu này.':'✘ Phản ví dụ! Tham lam KHÔNG tối ưu.'}</div></div></div>`}
+ h.addEventListener('input',u);h.addEventListener('click',e=>{if(e.target.dataset.p){$('#c22',h).value=e.target.dataset.p;u()}});u();}},
+23:{t:'Chạy từng bước: dãy con tăng dài nhất (LIS)',f(h){Tracer(h,{inputs:[{id:'a',label:'Dãy a =',val:'3 1 4 1 5 9 2 6',w:220}],
+ code:['for (int i = 0; i < n; i++) {','    dp[i] = 1;','    for (int j = 0; j < i; j++)','        if (a[j] < a[i])','            dp[i] = max(dp[i], dp[j] + 1);','}','// đáp án = max(dp[0..n-1])'],
+ gen(v){const a=v.a.trim().split(/[\s,]+/).map(Number);if(a.length<1||a.length>8||a.some(t=>!Number.isInteger(t)))return'Nhập 1–8 số nguyên để dễ quan sát.';
+  const {steps,P,O}=mk(),dp=a.map(()=>'?');const X=(i,j)=>({arr:a,hi:i,mk:j,arr2:[...dp],hi2:i,l1:'Dãy a (xanh: i, vàng: j):',l2:'dp[i] = độ dài LIS kết thúc tại a[i]:'});
+  for(let i=0;i<a.length;i++){dp[i]=1;P(1,`i = ${i}: khởi tạo dp[${i}] = 1 (chỉ có a[${i}]).`,{i},X(i,-1));
+   for(let j=0;j<i;j++){const ok=a[j]<a[i];P(3,`a[${j}] = ${a[j]} < a[${i}] = ${a[i]}? → ${ok?'đúng, có thể nối a['+i+'] vào sau dãy kết thúc tại a['+j+']':'sai'}.`,{i,j},X(i,j));
+    if(ok&&dp[j]+1>dp[i]){dp[i]=dp[j]+1;P(4,`dp[${i}] = dp[${j}] + 1 = **${dp[i]}**.`,{i,j},X(i,j))}}}
+  const m=Math.max(...dp);O(String(m));P(6,`Đáp án = max(dp) = **${m}**.`,{},X(dp.indexOf(m),-1));return steps}})}},
+24:{t:'BFS tìm đường đi ngắn nhất trên lưới',f(h){
+ const R=7,C=10;let W,d,fr,done,lv;const S=[0,0],T=[R-1,C-1];
+ const base=['..........','.##.####..','.#.....#..','.#.###.#.#','...#...#..','.###.###..','.........T'];
+ h.innerHTML=`<div class="row"><button class="b pri" id="st24">Bước tiếp ▶ (mở rộng 1 lớp)</button><button class="b" id="al24">▶▶ Chạy hết</button><button class="b" id="rs24">⟲ Đặt lại</button><button class="b" id="cl24">Xóa tường</button><button class="b" id="rd24">🎲 Tường ngẫu nhiên</button></div><div class="lab">Bấm vào ô để đặt/xóa tường. S: xuất phát, T: đích. Số trong ô = khoảng cách ngắn nhất từ S.</div><div id="g24" class="g2" style="grid-template-columns:repeat(${C},38px)"></div><div class="tnote" id="m24"></div>`;
+ function reset(m){d=Array.from({length:R},()=>Array(C).fill(-1));d[S[0]][S[1]]=0;fr=[S];done=false;lv=0;draw(m||'Hàng đợi ban đầu chỉ có ô S với d = 0. Bấm <b>Bước tiếp</b>.')}
+ function step(){if(done)return;const nf=[];for(const [x,y] of fr)for(const [u,v] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]])if(u>=0&&u<R&&v>=0&&v<C&&!W[u][v]&&d[u][v]<0){d[u][v]=d[x][y]+1;nf.push([u,v])}
+  lv++;fr=nf;if(d[T[0]][T[1]]>=0){done=true;draw(`🎯 Đến đích T! Đường đi ngắn nhất dài <b>${d[T[0]][T[1]]}</b> bước (ô xanh lá).`);return}
+  if(!nf.length){done=true;draw('❌ Hàng đợi rỗng mà chưa đến T → <b>không có đường đi</b>.');return}draw(`Lớp ${lv}: thêm ${nf.length} ô có khoảng cách ${lv} vào hàng đợi (ô vàng).`)}
+ function path(){const P=new Set();if(d[T[0]][T[1]]<0)return P;let [x,y]=T;P.add(x+','+y);while(d[x][y]>0){for(const [u,v] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]])if(u>=0&&u<R&&v>=0&&v<C&&d[u][v]===d[x][y]-1){x=u;y=v;break}P.add(x+','+y)}return P}
+ function draw(m){const P=done?path():new Set(),F=new Set(fr.map(p=>p+''));let g='';for(let i=0;i<R;i++)for(let j=0;j<C;j++){const s=i===S[0]&&j===S[1],t=i===T[0]&&j===T[1];let st='min-width:0;padding:4px 0;font-size:13px;';
+   if(W[i][j])st+='background:#334155;border-color:#334155;color:#334155';else if(P.has(i+','+j))st+='background:#bbf7d0;border-color:#16a34a';else if(F.has(i+','+j))st+='background:#fef3c7;border-color:#d99a1c';else if(d[i][j]>=0)st+='background:#dbeafe;border-color:#93c5fd';
+   g+=`<div class="cell" data-r="${i}" data-c="${j}" style="${st}">${s?'S':t?'T':W[i][j]?'#':d[i][j]>=0?d[i][j]:''}</div>`}$('#g24',h).innerHTML=g;$('#m24',h).innerHTML=m}
+ const load=b=>{W=b.map(r=>[...r].map(c=>c==='#'))};load(base);
+ $('#st24',h).onclick=step;$('#al24',h).onclick=()=>{let k=0;while(!done&&k++<200)step()};$('#rs24',h).onclick=()=>reset();
+ $('#cl24',h).onclick=()=>{W=W.map(r=>r.map(()=>false));reset()};$('#rd24',h).onclick=()=>{W=W.map((r,i)=>r.map((_,j)=>(i+j>0&&!(i===T[0]&&j===T[1]))&&Math.random()<.28));reset()};
+ $('#g24',h).onclick=e=>{const c=e.target.dataset;if(c.r===undefined)return;const i=+c.r,j=+c.c;if((i===S[0]&&j===S[1])||(i===T[0]&&j===T[1]))return;W[i][j]=!W[i][j];reset('Đã thay đổi tường — chạy lại BFS.')};reset();}}
+};
+
+const Q2={
+13:[['Thành phần bắt buộc của mọi hàm đệ quy là:','',['Điểm dừng (trường hợp cơ sở)','Vòng lặp for','Biến toàn cục','Mảng'],0,'Không có điểm dừng, hàm sẽ gọi mãi không dừng.'],
+['f(4) bằng bao nhiêu?','int f(int n) {\n  if (n == 0) return 0;\n  return n + f(n - 1);\n}',['10','4','24','0'],0,'f(4) = 4 + 3 + 2 + 1 + 0 = 10.'],
+['Hàm đệ quy thiếu điểm dừng sẽ gây ra:','',['Lỗi tràn ngăn xếp (stack overflow)','Kết quả bằng 0','Lỗi biên dịch','Chạy nhanh hơn'],0,'Mỗi lời gọi chiếm bộ nhớ ngăn xếp; gọi vô hạn sẽ hết bộ nhớ.'],
+['Tính Fibonacci bằng đệ quy trực tiếp f(n) = f(n-1) + f(n-2) có nhược điểm:','',['Rất chậm vì tính lặp lại, thời gian tăng theo hàm mũ','Sai kết quả','Không viết được bằng C++','Tốn bộ nhớ O(n²)'],0,'f(n-2) bị tính lại trong f(n-1)… → dùng quy hoạch động để lưu kết quả.'],
+['Gọi in(3) sẽ in ra:','void in(int n) {\n  if (n == 0) return;\n  in(n - 1);\n  cout << n << " ";\n}',['1 2 3','3 2 1','3','0 1 2 3'],0,'Lệnh in đặt SAU lời gọi đệ quy nên in(1) in trước, in(3) in sau cùng.'],
+['Có bao nhiêu hoán vị của 3 phần tử {1, 2, 3}?','',['6','3','9','27'],0,'3! = 6: 123, 132, 213, 231, 312, 321.']],
+14:[['s.size() bằng bao nhiêu?','set<int> s = {5, 1, 5, 3};',['3','4','2','5'],0,'set tự loại phần tử trùng: {1, 3, 5}.'],
+['Duyệt set s = {5, 1, 3} bằng for (int x : s) sẽ in:','',['1 3 5','5 1 3','5 3 1','Thứ tự ngẫu nhiên'],0,'set luôn giữ các phần tử theo thứ tự tăng dần.'],
+['m["an"] bằng bao nhiêu?','map<string, int> m;\nm["an"]++;\nm["an"]++;',['2','1','0','Lỗi'],0,'Lần đầu truy cập, m["an"] được tạo với giá trị 0 rồi tăng 2 lần.'],
+['Cách kiểm tra x có trong set s:','',['s.count(x) > 0','s[x] == true','s.has(x)','s.contains(x) == -1'],0,'count trả về 1 nếu có, 0 nếu không (set không có phần tử trùng).'],
+['Độ phức tạp của s.insert(x) với set là:','',['O(log n)','O(1)','O(n)','O(n²)'],0,'set được cài đặt bằng cây cân bằng.'],
+['Đếm số giá trị khác nhau của dãy a, cách đơn giản nhất là:','',['Đưa tất cả vào set rồi lấy size()','Dùng stack','Sắp xếp giảm dần','Dùng queue'],0,'set tự bỏ trùng nên size() chính là số giá trị khác nhau.']],
+15:[['stack hoạt động theo nguyên tắc:','',['LIFO – vào sau ra trước','FIFO – vào trước ra trước','Ngẫu nhiên','Theo thứ tự tăng dần'],0,'Giống chồng đĩa: đĩa đặt sau cùng được lấy ra đầu tiên.'],
+['queue hoạt động theo nguyên tắc:','',['FIFO – vào trước ra trước','LIFO – vào sau ra trước','Lớn nhất ra trước','Ngẫu nhiên'],0,'Giống xếp hàng: ai đến trước được phục vụ trước.'],
+['st.top() bằng bao nhiêu?','stack<int> st;\nst.push(1); st.push(2); st.push(3);\nst.pop();',['2','3','1','Lỗi'],0,'pop xóa 3 (phần tử ở đỉnh), đỉnh mới là 2.'],
+['q.front() bằng bao nhiêu?','queue<int> q;\nq.push(1); q.push(2); q.push(3);\nq.pop();',['2','1','3','Lỗi'],0,'pop xóa phần tử đầu hàng là 1, đầu hàng mới là 2.'],
+['Dãy ngoặc nào hợp lệ?','',['([])','([)]','(()','])'],0,'([)] sai vì ] gặp đỉnh stack là ( không cùng loại.'],
+['Thuật toán BFS sử dụng cấu trúc dữ liệu nào?','',['queue','stack','set','map'],0,'BFS duyệt theo từng lớp, ô được thêm trước được xét trước.']],
+16:[['Câu lệnh nào chuyển việc đọc dữ liệu sang tệp BAI.INP?','',['freopen("BAI.INP", "r", stdin);','freopen("BAI.INP", "w", stdout);','cin.open("BAI.INP");','#include "BAI.INP"'],0,'"r" = read, gắn với stdin để cin đọc từ tệp.'],
+['Trong 1 giây, máy chấm thực hiện được khoảng bao nhiêu phép tính?','',['10^8','10^3','10^15','10'],0,'Đây là quy tắc ước lượng phổ biến khi chọn thuật toán.'],
+['Với n = 10^5 và giới hạn 1 giây, thuật toán nào chắc chắn kịp?','',['O(n log n)','O(n²)','O(n³)','O(2ⁿ)'],0,'n log n ≈ 1,7×10^6; còn n² = 10^10 quá chậm.'],
+['Đoạn code có độ phức tạp:','for (int i = 1; i <= n; i++)\n  for (int j = 1; j <= n; j++)\n    s += i * j;',['O(n²)','O(n)','O(log n)','O(2n)'],0,'Vòng trong chạy n lần cho mỗi i → n × n.'],
+['Hai lệnh ios::sync_with_stdio(false); cin.tie(0); dùng để:','',['Tăng tốc độ nhập xuất','Đọc dữ liệu từ tệp','Tắt màn hình','Kiểm tra lỗi'],0,'Rất cần khi nhập 10^5 – 10^6 số.'],
+['Tổng của 10^5 số, mỗi số ≤ 10^9, nên lưu bằng kiểu:','',['long long','int','char','bool'],0,'Tổng có thể đến 10^14, vượt giới hạn int.']],
+17:[['Sắp xếp đếm phân phối phù hợp khi:','',['Giá trị các phần tử nhỏ (ví dụ ≤ 10^6)','Phần tử là số thực','Giá trị đến 10^18','Phần tử là xâu dài'],0,'Cần mảng đếm có kích thước bằng giá trị lớn nhất.'],
+['Độ phức tạp của sắp xếp đếm phân phối:','',['O(n + MAX)','O(n²)','O(n log n)','O(MAX²)'],0,'Duyệt mảng một lần và duyệt mảng đếm một lần.'],
+['Mảng đánh số a[1..n], lệnh sắp xếp đúng là:','',['sort(a + 1, a + n + 1);','sort(a, a + n);','sort(a + 1, a + n);','sort(a[1], a[n]);'],0,'Đoạn [a+1, a+n+1) chứa đúng a[1]..a[n].'],
+['Với a = {3, 1, 3, 2, 3}, cnt[3] bằng:','',['3','2','1','5'],0,'Số 3 xuất hiện 3 lần.'],
+['Sau khi sắp xếp, đếm số giá trị khác nhau bằng cách:','',['Đếm số vị trí i có a[i] != a[i-1] (cộng 1 cho phần tử đầu)','Đếm số phần tử chẵn','Lấy a[n-1] - a[0]','Không thể đếm được'],0,'Các giá trị bằng nhau đứng liền nhau thành từng nhóm.'],
+['stable_sort khác sort ở điểm:','',['Giữ nguyên thứ tự ban đầu của các phần tử bằng nhau','Nhanh hơn nhiều','Chỉ sắp giảm dần','Không cần hàm so sánh'],0,'Hữu ích khi đề yêu cầu "nếu bằng nhau thì giữ thứ tự nhập".']],
+18:[['UCLN(12, 18) bằng:','',['6','3','36','2'],0,'Euclid: (18, 12) → (12, 6) → (6, 0) → 6.'],
+['Cách tính BCNN an toàn, tránh tràn số:','',['a / ucln(a, b) * b','a * b / ucln(a, b)','a * b','ucln(a, b) * a'],0,'Chia trước rồi nhân để giá trị trung gian không quá lớn.'],
+['Trong sàng Eratosthenes, gạch bội của p bắt đầu từ:','',['p × p','2','p + 1','2 × p luôn bắt buộc'],0,'Các bội nhỏ hơn p×p đã bị gạch bởi số nguyên tố nhỏ hơn p.'],
+['Độ phức tạp của sàng Eratosthenes đến N:','',['O(N log log N)','O(N²)','O(N√N)','O(2^N)'],0,'Gần như tuyến tính, sàng đến 10^7 vẫn nhanh.'],
+['Có bao nhiêu số nguyên tố không vượt quá 30?','',['10','9','11','15'],0,'2, 3, 5, 7, 11, 13, 17, 19, 23, 29.'],
+['Số 36 có bao nhiêu ước dương?','',['9','8','6','12'],0,'1, 2, 3, 4, 6, 9, 12, 18, 36 (36 là số chính phương nên số ước lẻ).']],
+19:[['Công thức xây dựng mảng cộng dồn:','',['S[i] = S[i-1] + a[i]','S[i] = a[i] - a[i-1]','S[i] = S[i-1] * a[i]','S[i] = a[1] + a[i]'],0,'Mỗi S[i] = tổng a[1..i].'],
+['Tổng đoạn a[l..r] bằng:','',['S[r] - S[l-1]','S[r] - S[l]','S[r] + S[l]','S[l] - S[r]'],0,'Lấy tổng đến r trừ phần trước l.'],
+['a[1..4] = {2, 4, 1, 5}. S[3] bằng:','',['7','11','5','1'],0,'2 + 4 + 1 = 7.'],
+['n số, q câu hỏi tổng đoạn. Dùng mảng cộng dồn, độ phức tạp là:','',['O(n + q)','O(n × q)','O(q log n)','O(n²)'],0,'Chuẩn bị O(n), mỗi câu hỏi O(1).'],
+['Cộng v vào mọi a[l..r] bằng mảng hiệu d:','',['d[l] += v; d[r+1] -= v;','d[l] += v; d[r] -= v;','d[l] -= v; d[r+1] += v;','for i = l..r: d[i] += v;'],0,'Cộng dồn d về sau, hiệu ứng +v bắt đầu từ l và bị triệt tiêu từ r+1.'],
+['Vì sao đặt S[0] = 0?','',['Để công thức S[r] - S[l-1] đúng cả khi l = 1','Vì C++ bắt buộc','Để chạy nhanh hơn','Không cần thiết'],0,'Khi l = 1 ta cần S[0] = tổng rỗng = 0.']],
+20:[['Điều kiện để áp dụng tìm kiếm nhị phân trên mảng:','',['Mảng đã được sắp xếp','Mảng có ít hơn 100 phần tử','Mảng không có số âm','Mảng có số phần tử chẵn'],0,'Phải biết nửa nào có thể chứa x.'],
+['Độ phức tạp của tìm kiếm nhị phân:','',['O(log n)','O(n)','O(n log n)','O(1)'],0,'Mỗi bước loại bỏ một nửa.'],
+['Với 10^6 phần tử, tìm kiếm nhị phân cần tối đa khoảng bao nhiêu lần so sánh?','',['20','1000','10^6','500 000'],0,'2^20 ≈ 10^6.'],
+['lower_bound(a, a + n, x) trả về vị trí của:','',['Phần tử đầu tiên ≥ x','Phần tử đầu tiên > x','Phần tử cuối cùng ≤ x','Phần tử bằng x, nếu không có thì -1'],0,'upper_bound mới là phần tử đầu tiên > x.'],
+['lo = 0, hi = 9 thì mid = (lo + hi) / 2 bằng:','',['4','4.5','5','9'],0,'Chia nguyên: 9 / 2 = 4.'],
+['"Chặt nhị phân kết quả" áp dụng được khi:','',['Hàm kiểm tra check(k) có tính đơn điệu','Đáp án là số thực','Đề có nhiều test','n rất nhỏ'],0,'Đúng với k thì đúng với mọi giá trị lớn hơn k (hoặc ngược lại).']],
+21:[['Tìm cặp tổng X bằng hai con trỏ, nếu a[i] + a[j] < X thì:','',['Tăng i','Giảm j','Tăng j','Dừng lại'],0,'Cần tổng lớn hơn → chuyển sang phần tử trái lớn hơn.'],
+['Độ phức tạp của kỹ thuật hai con trỏ (sau khi đã sắp xếp):','',['O(n)','O(n²)','O(log n)','O(n³)'],0,'Mỗi con trỏ chỉ di chuyển tối đa n bước.'],
+['Bài tìm cặp tổng X bằng hai con trỏ yêu cầu mảng:','',['Đã sắp xếp tăng dần','Không có số âm','Có độ dài chẵn','Chỉ gồm số nguyên tố'],0,'Nhờ thứ tự mới biết nên di chuyển con trỏ nào.'],
+['Mảng {1, 3, 5, 8, 10}, X = 13. Thuật toán hai con trỏ tìm thấy cặp nào đầu tiên?','',['(3, 10)','(5, 8)','(1, 10)','Không tìm thấy'],0,'1+10 = 11 < 13 → i++; 3+10 = 13 → tìm thấy.'],
+['Cửa sổ trượt độ dài k, khi dịch sang phải 1 ô:','',['s = s + a[i] - a[i-k]','s = s + a[i]','Tính lại tổng từ đầu','s = a[i] - a[i-k]'],0,'Thêm phần tử mới vào, bỏ phần tử cũ ra: O(1) mỗi bước.'],
+['Tìm đoạn con dài nhất tổng ≤ S (các số dương), khi tổng vượt S thì:','',['Tăng con trỏ trái','Giảm con trỏ phải','Dừng thuật toán','Tăng con trỏ phải'],0,'Bỏ bớt phần tử bên trái cho đến khi tổng ≤ S.']],
+22:[['Ý tưởng của thuật toán tham lam là:','',['Chọn phương án tốt nhất tại mỗi bước','Thử mọi khả năng','Chia đôi bài toán','Lưu kết quả bài toán con'],0,'Tham lam không quay lại xem xét lựa chọn cũ.'],
+['Mệnh giá {1, 3, 4}, đổi 6 đồng. Tham lam (lấy tờ lớn nhất trước) dùng bao nhiêu tờ?','',['3','2','6','4'],0,'4 + 1 + 1 = 3 tờ, trong khi tối ưu là 3 + 3 = 2 tờ.'],
+['Bài chọn nhiều hoạt động không chồng nhau nhất: sắp xếp theo:','',['Thời điểm kết thúc tăng dần','Thời điểm bắt đầu tăng dần','Độ dài giảm dần','Không cần sắp xếp'],0,'Kết thúc sớm để dành nhiều thời gian nhất cho các hoạt động sau.'],
+['Thuật toán tham lam có luôn cho kết quả đúng không?','',['Không, cần chứng minh hoặc kiểm tra phản ví dụ','Luôn đúng','Chỉ sai khi n lẻ','Luôn sai'],0,'Ví dụ đổi tiền với {1, 3, 4} là phản ví dụ.'],
+['Thuật toán tham lam thường đi kèm bước nào?','',['Sắp xếp','Đệ quy quay lui','Sàng nguyên tố','BFS'],0,'Sắp xếp để biết phần tử nào "tốt nhất" cần chọn trước.'],
+['Có M đồng, muốn mua được nhiều món nhất (mỗi món 1 cái), nên:','',['Mua các món rẻ trước','Mua các món đắt trước','Mua ngẫu nhiên','Mua món ở giữa danh sách'],0,'Món rẻ tốn ít tiền nhất cho mỗi món.']],
+23:[['Đặc trưng của quy hoạch động là:','',['Lưu kết quả bài toán con để không tính lại','Luôn chọn phương án tốt nhất trước mắt','Thử ngẫu nhiên','Chỉ dùng cho đồ thị'],0,'Các bài toán con gối nhau được tính một lần rồi dùng lại.'],
+['Leo cầu thang mỗi bước 1 hoặc 2 bậc. Công thức số cách:','',['f[n] = f[n-1] + f[n-2]','f[n] = f[n-1] × 2','f[n] = n × f[n-1]','f[n] = f[n-1] + 1'],0,'Bậc n đến từ bậc n−1 (bước 1) hoặc n−2 (bước 2).'],
+['f[1] = 1, f[2] = 2, f[n] = f[n-1] + f[n-2]. f[5] bằng:','',['8','5','13','10'],0,'1, 2, 3, 5, 8.'],
+['Trong bài LIS, dp[i] là:','',['Độ dài dãy con tăng dài nhất kết thúc tại a[i]','Giá trị lớn nhất đến vị trí i','Tổng a[0..i]','Số phần tử nhỏ hơn a[i]'],0,'Đáp án là giá trị lớn nhất trong mảng dp.'],
+['Độ dài dãy con tăng dài nhất của {3, 1, 4, 1, 5, 9, 2, 6} là:','',['4','3','5','6'],0,'Ví dụ 1, 4, 5, 9 hoặc 3, 4, 5, 6.'],
+['Trong bài cái túi 0/1 dùng mảng 1 chiều dp[j], vòng j chạy giảm dần để:','',['Mỗi đồ vật chỉ được chọn một lần','Chạy nhanh hơn','Đỡ tốn bộ nhớ','Kết quả lớn hơn'],0,'Nếu j tăng dần, một đồ vật có thể bị cộng nhiều lần (thành bài cái túi không giới hạn).']],
+24:[['BFS sử dụng cấu trúc dữ liệu:','',['queue','stack','map','set'],0,'Duyệt theo lớp: ô gần được xét trước.'],
+['Trên lưới không trọng số, BFS dùng để:','',['Tìm đường đi ngắn nhất','Sắp xếp các ô','Tính tổng các ô','Tìm số nguyên tố'],0,'Lớp thứ k gồm các ô có khoảng cách đúng bằng k.'],
+['DFS thường được cài đặt bằng:','',['Đệ quy (hoặc stack)','queue','Mảng cộng dồn','Tìm kiếm nhị phân'],0,'Đi sâu hết mức rồi quay lui.'],
+['Để đếm số vùng liên thông trên lưới, ta:','',['Đếm số lần gọi DFS/BFS từ một ô chưa thăm','Đếm số ô trống','Đếm số tường','Dùng sàng Eratosthenes'],0,'Mỗi lần gọi sẽ thăm hết một vùng.'],
+['Mảng đánh dấu đã thăm (visited) dùng để:','',['Không thăm lại một ô nhiều lần, tránh lặp vô hạn','Lưu đáp án','Sắp xếp các ô','Tăng tốc nhập xuất'],0,'Thiếu mảng này, BFS/DFS có thể chạy mãi.'],
+['Độ phức tạp của BFS trên lưới n × m:','',['O(n × m)','O((n × m)²)','O(n + m)','O(2^(n×m))'],0,'Mỗi ô được thêm vào hàng đợi đúng một lần.']]
+};
+</script>
+
+<script type="text/plain" id="p1-1">
+### Đề bài
+Cho số nguyên không âm n. Hãy tính **tổng các chữ số** của n và cho biết n có **chia hết cho 3** hay không.
+### Dữ liệu vào
+Một số nguyên n (0 ≤ n ≤ 10^18).
+### Kết quả
+- Dòng 1: tổng các chữ số của n.
+- Dòng 2: `YES` nếu n chia hết cho 3, ngược lại `NO`.
+### Ví dụ
+```
+TONGCS.INP: 2026
+TONGCS.OUT: 10
+            NO
+```
+### Giới hạn
+- 60% số test: n ≤ 10^9.
+- 40% số test: n ≤ 10^18.
+@@
+Tách từng chữ số bằng `n % 10` và `n /= 10` (Bài 6). n đến 10^18 thì cần kiểu dữ liệu nào?
+@@
+Một số chia hết cho 3 khi và chỉ khi **tổng các chữ số** của nó chia hết cho 3.
+@@
+Dùng `long long` để chứa n ≤ 10^18 (nếu dùng `int` chỉ được 60% điểm). Tách chữ số bằng vòng `while`, sau đó dùng dấu hiệu chia hết cho 3 trên tổng chữ số. Độ phức tạp O(số chữ số) ≈ 19 bước.
+@@
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    freopen("TONGCS.INP", "r", stdin);
+    freopen("TONGCS.OUT", "w", stdout);
+    long long n;
+    cin >> n;
+    int s = 0;
+    while (n > 0) {
+        s += n % 10;
+        n /= 10;
+    }
+    cout << s << '\n';
+    cout << (s % 3 == 0 ? "YES" : "NO");
+    return 0;
+}
+</script>
+<script type="text/plain" id="p1-2">
+### Đề bài
+Một số nguyên dương được gọi là **số "ba ước"** nếu nó có **đúng 3 ước** dương. Ví dụ 4 có các ước 1, 2, 4 nên là số ba ước. Cho N, hãy đếm số lượng số ba ước trong đoạn [1, N].
+### Dữ liệu vào
+Một số nguyên N (1 ≤ N ≤ 10^12).
+### Kết quả
+Số lượng số ba ước không vượt quá N.
+### Ví dụ
+```
+BAUOC.INP: 30
+BAUOC.OUT: 3
+```
+Giải thích: 4, 9, 25.
+### Giới hạn
+- 50% số test: N ≤ 10^4.
+- 50% số test: N ≤ 10^12.
+@@
+Với N nhỏ: duyệt từng số x ≤ N và đếm ước của x trong O(√x). Thử liệt kê các số ba ước nhỏ: 4, 9, 25, 49… em thấy chúng có đặc điểm gì?
+@@
+x có đúng 3 ước ⇔ x = p² với p là **số nguyên tố**. Vậy chỉ cần đếm số nguyên tố p ≤ √N ≤ 10^6 bằng **sàng Eratosthenes** (Bài 18).
+@@
+Nếu x = p² (p nguyên tố) thì ước của x là 1, p, p² — đúng 3 ước. Ngược lại, số có số ước lẻ phải là số chính phương, và chỉ bình phương số nguyên tố mới có đúng 3 ước. Tính r = ⌊√N⌋ (cẩn thận sai số số thực), sàng nguyên tố đến r rồi đếm. Độ phức tạp O(√N log log √N).
+@@
+#include <bits/stdc++.h>
+using namespace std;
+bool hop[1000001];
+int main() {
+    freopen("BAUOC.INP", "r", stdin);
+    freopen("BAUOC.OUT", "w", stdout);
+    long long N;
+    cin >> N;
+    long long r = sqrtl(N);
+    while ((r + 1) * (r + 1) <= N) r++;   // sửa sai số của sqrt
+    while (r * r > N) r--;
+    hop[0] = hop[1] = true;
+    for (long long p = 2; p * p <= r; p++)
+        if (!hop[p])
+            for (long long k = p * p; k <= r; k += p) hop[k] = true;
+    int dem = 0;
+    for (long long x = 2; x <= r; x++)
+        if (!hop[x]) dem++;
+    cout << dem;
+    return 0;
+}
+</script>
+<script type="text/plain" id="p1-3">
+### Đề bài
+Cho xâu s gồm các chữ cái thường. Hỏi có thể **xóa tối đa một ký tự** của s để được xâu **đối xứng** (đọc xuôi và ngược giống nhau) hay không?
+### Dữ liệu vào
+Một dòng chứa xâu s (1 ≤ độ dài ≤ 10^5).
+### Kết quả
+`YES` nếu làm được, ngược lại `NO`.
+### Ví dụ
+```
+XAUDX.INP: abca
+XAUDX.OUT: YES
+```
+Giải thích: xóa 'c' được "aba" (hoặc xóa 'b' được "aca").
+### Giới hạn
+- 50% số test: độ dài ≤ 1000.
+- 50% số test: độ dài ≤ 10^5.
+@@
+Cách "trâu": thử xóa từng vị trí rồi kiểm tra đối xứng — O(n²), đủ cho 50% số test.
+@@
+Dùng **hai con trỏ** i ở đầu, j ở cuối, tiến vào giữa. Khi gặp s[i] ≠ s[j] lần đầu, chỉ có 2 lựa chọn: bỏ s[i] hoặc bỏ s[j]. Kiểm tra đoạn còn lại có đối xứng không.
+@@
+Hai con trỏ (Bài 21) đi vào giữa khi hai ký tự bằng nhau. Nếu đi hết thì xâu vốn đối xứng → YES. Nếu gặp vị trí khác nhau, ký tự bị xóa bắt buộc phải là s[i] hoặc s[j], nên chỉ cần kiểm tra s[i+1..j] hoặc s[i..j-1]. Độ phức tạp O(n).
+@@
+#include <bits/stdc++.h>
+using namespace std;
+string s;
+bool doiXung(int i, int j) {
+    while (i < j) {
+        if (s[i] != s[j]) return false;
+        i++; j--;
+    }
+    return true;
+}
+int main() {
+    freopen("XAUDX.INP", "r", stdin);
+    freopen("XAUDX.OUT", "w", stdout);
+    cin >> s;
+    int i = 0, j = s.size() - 1;
+    while (i < j && s[i] == s[j]) { i++; j--; }
+    if (i >= j || doiXung(i + 1, j) || doiXung(i, j - 1)) cout << "YES";
+    else cout << "NO";
+    return 0;
+}
+</script>
+<script type="text/plain" id="p1-4">
+### Đề bài
+Cho dãy n số nguyên a1, a2, …, an. Hãy tìm một **đoạn con liên tiếp khác rỗng** có **tổng lớn nhất** và in ra tổng đó.
+### Dữ liệu vào
+- Dòng 1: số nguyên n (1 ≤ n ≤ 10^5).
+- Dòng 2: n số nguyên ai (|ai| ≤ 10^9).
+### Kết quả
+Tổng lớn nhất tìm được.
+### Ví dụ
+```
+DOANCON.INP: 9
+             -2 1 -3 4 -1 2 1 -5 4
+DOANCON.OUT: 6
+```
+Giải thích: đoạn 4 -1 2 1.
+### Giới hạn
+- 40% số test: n ≤ 300 · 30% số test: n ≤ 5000 · 30% số test: n ≤ 10^5.
+@@
+O(n³): thử mọi đoạn [l, r] và cộng. O(n²): dùng **mảng cộng dồn** (Bài 19) để tính tổng đoạn trong O(1).
+@@
+O(n): gọi cur = tổng lớn nhất của đoạn **kết thúc tại i**. Khi xét a[i]: hoặc nối vào đoạn trước (cur + a[i]), hoặc bắt đầu đoạn mới (a[i]).
+@@
+Đây là thuật toán Kadane — một bài quy hoạch động (Bài 23): cur(i) = max(a[i], cur(i−1) + a[i]), đáp án là giá trị cur lớn nhất. Chú ý: tổng có thể đến 10^14 nên dùng `long long`; dãy có thể toàn số âm nên khởi tạo best rất nhỏ, không phải 0.
+@@
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    freopen("DOANCON.INP", "r", stdin);
+    freopen("DOANCON.OUT", "w", stdout);
+    int n;
+    cin >> n;
+    long long cur = 0, best = LLONG_MIN;
+    for (int i = 0; i < n; i++) {
+        long long x;
+        cin >> x;
+        cur = max(x, cur + x);
+        best = max(best, cur);
+    }
+    cout << best;
+    return 0;
+}
+</script>
+<script type="text/plain" id="p2-1">
+### Đề bài
+Buổi học bồi dưỡng bắt đầu lúc h giờ m phút và kéo dài t phút. Hãy cho biết buổi học **kết thúc lúc mấy giờ** (theo đồng hồ 24 giờ; sau 23:59 là 00:00 của ngày hôm sau).
+### Dữ liệu vào
+Ba số nguyên h, m, t (0 ≤ h ≤ 23; 0 ≤ m ≤ 59; 1 ≤ t ≤ 10^4).
+### Kết quả
+Hai số giờ và phút kết thúc, mỗi số in đúng **2 chữ số**, cách nhau một dấu cách.
+### Ví dụ
+```
+LICHHOC.INP: 19 0 90
+LICHHOC.OUT: 20 30
+
+LICHHOC.INP: 23 30 45
+LICHHOC.OUT: 00 15
+```
+@@
+Đổi tất cả ra **phút** tính từ 00:00, cộng t, rồi đổi ngược lại giờ – phút bằng `/` và `%` (Bài 3).
+@@
+Một ngày có 1440 phút: lấy tổng % 1440 để quay vòng qua nửa đêm. In 2 chữ số bằng `printf("%02d")` hoặc `setw(2) << setfill('0')`.
+@@
+tong = (h × 60 + m + t) % 1440; giờ = tong / 60, phút = tong % 60. Lỗi hay gặp: quên quay vòng qua nửa đêm (in ra 24 giờ, 25 giờ…) và in "0 15" thay vì "00 15".
+@@
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    freopen("LICHHOC.INP", "r", stdin);
+    freopen("LICHHOC.OUT", "w", stdout);
+    int h, m, t;
+    cin >> h >> m >> t;
+    int tong = (h * 60 + m + t) % 1440;
+    printf("%02d %02d", tong / 60, tong % 60);
+    return 0;
+}
+</script>
+<script type="text/plain" id="p2-2">
+### Đề bài
+Cho dãy n số nguyên a1, …, an và số X. Đếm số cặp chỉ số (i, j) với **i < j** sao cho ai + aj = X.
+### Dữ liệu vào
+- Dòng 1: n và X (1 ≤ n ≤ 10^5; |X| ≤ 2×10^9).
+- Dòng 2: n số nguyên ai (|ai| ≤ 10^9).
+### Kết quả
+Số cặp tìm được.
+### Ví dụ
+```
+DEMCAP.INP: 5 6
+            1 5 3 3 2
+DEMCAP.OUT: 2
+```
+Giải thích: (1, 5) và (3, 3).
+### Giới hạn
+- 50% số test: n ≤ 3000 · 50% số test: n ≤ 10^5.
+@@
+O(n²): hai vòng lặp i < j, đủ cho 50% số test.
+@@
+Duyệt j từ trái sang phải: số cặp có đầu phải là j bằng **số lần giá trị X − a[j] đã xuất hiện trước đó**. Đếm bằng `map` (Bài 14).
+@@
+Dùng map cnt lưu số lần xuất hiện của các giá trị đã duyệt. Với mỗi a[j]: cộng cnt[X − a[j]] vào đáp án rồi mới tăng cnt[a[j]] (để không ghép a[j] với chính nó). Đáp án có thể đến ~5×10^9 cặp → `long long`. Độ phức tạp O(n log n).
+@@
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    freopen("DEMCAP.INP", "r", stdin);
+    freopen("DEMCAP.OUT", "w", stdout);
+    int n;
+    long long X;
+    cin >> n >> X;
+    map<long long, int> cnt;
+    long long ans = 0;
+    for (int j = 0; j < n; j++) {
+        long long a;
+        cin >> a;
+        if (cnt.count(X - a)) ans += cnt[X - a];
+        cnt[a]++;
+    }
+    cout << ans;
+    return 0;
+}
+</script>
+<script type="text/plain" id="p2-3">
+### Đề bài
+Cho dãy n số nguyên a1, …, an và q câu hỏi. Mỗi câu hỏi gồm hai số l, r — hãy tính tổng al + al+1 + … + ar.
+### Dữ liệu vào
+- Dòng 1: n và q (1 ≤ n, q ≤ 10^5).
+- Dòng 2: n số nguyên ai (|ai| ≤ 10^9).
+- q dòng tiếp theo: mỗi dòng hai số l, r (1 ≤ l ≤ r ≤ n).
+### Kết quả
+q dòng, mỗi dòng là đáp án của một câu hỏi.
+### Ví dụ
+```
+TONGDOAN.INP: 5 2
+              3 -1 4 1 5
+              1 3
+              2 5
+TONGDOAN.OUT: 6
+              9
+```
+### Giới hạn
+- 50% số test: n, q ≤ 1000 · 50% số test: n, q ≤ 10^5.
+@@
+Cộng trực tiếp mỗi câu hỏi tốn O(n) → tổng O(n·q) = 10^10 với n, q = 10^5: quá thời gian.
+@@
+Mảng cộng dồn S[i] = S[i−1] + a[i] (Bài 19). Tổng đoạn = S[r] − S[l−1].
+@@
+Chuẩn bị mảng S trong O(n), mỗi câu hỏi trả lời O(1). Tổng tối đa 10^14 → `long long`. Nhập xuất 2×10^5 số nên thêm lệnh tăng tốc nhập xuất (Bài 16).
+@@
+#include <bits/stdc++.h>
+using namespace std;
+long long S[100005];
+int main() {
+    freopen("TONGDOAN.INP", "r", stdin);
+    freopen("TONGDOAN.OUT", "w", stdout);
+    ios::sync_with_stdio(false); cin.tie(0);
+    int n, q;
+    cin >> n >> q;
+    for (int i = 1; i <= n; i++) {
+        long long a;
+        cin >> a;
+        S[i] = S[i - 1] + a;
+    }
+    while (q--) {
+        int l, r;
+        cin >> l >> r;
+        cout << S[r] - S[l - 1] << '\n';
+    }
+    return 0;
+}
+</script>
+<script type="text/plain" id="p2-4">
+### Đề bài
+Mê cung là lưới n hàng, m cột; ô `.` đi được, ô `#` là tường. Từ một ô có thể đi sang 4 ô kề cạnh. Tìm **số bước ít nhất** để đi từ ô trên cùng bên trái (1, 1) đến ô dưới cùng bên phải (n, m). Nếu không đi được, in -1.
+### Dữ liệu vào
+- Dòng 1: n, m (1 ≤ n, m ≤ 1000).
+- n dòng tiếp theo: mỗi dòng m ký tự `.` hoặc `#`.
+### Kết quả
+Số bước ít nhất, hoặc -1.
+### Ví dụ
+```
+MECUNG.INP: 3 4
+            ..#.
+            .#..
+            ....
+MECUNG.OUT: 5
+```
+@@
+Đường đi ngắn nhất trên lưới không trọng số → **BFS** (Bài 24), không dùng DFS.
+@@
+Mảng d[i][j] = số bước ít nhất đến ô (i, j), khởi tạo -1 (chưa thăm). Nếu ô xuất phát hoặc ô đích là tường thì in -1 ngay.
+@@
+BFS từ (0, 0) bằng queue, mỗi ô vào hàng đợi đúng một lần → O(n·m) = 10^6 phép tính. Đáp án là d[n−1][m−1] (giữ nguyên -1 nếu không đến được). Lưới 1000×1000 nên khai báo mảng toàn cục.
+@@
+#include <bits/stdc++.h>
+using namespace std;
+int n, m, d[1005][1005];
+string a[1005];
+int dx[4] = {-1, 1, 0, 0}, dy[4] = {0, 0, -1, 1};
+int main() {
+    freopen("MECUNG.INP", "r", stdin);
+    freopen("MECUNG.OUT", "w", stdout);
+    cin >> n >> m;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    if (a[0][0] == '#' || a[n - 1][m - 1] == '#') { cout << -1; return 0; }
+    memset(d, -1, sizeof d);
+    queue<pair<int, int>> q;
+    d[0][0] = 0; q.push({0, 0});
+    while (!q.empty()) {
+        int x = q.front().first, y = q.front().second; q.pop();
+        for (int k = 0; k < 4; k++) {
+            int u = x + dx[k], v = y + dy[k];
+            if (u >= 0 && u < n && v >= 0 && v < m && a[u][v] == '.' && d[u][v] == -1) {
+                d[u][v] = d[x][y] + 1;
+                q.push({u, v});
+            }
+        }
+    }
+    cout << d[n - 1][m - 1];
+    return 0;
+}
+</script>
+<script type="text/plain" id="p3-1">
+### Đề bài
+Cho q câu hỏi, mỗi câu hỏi gồm hai số a, b. Hãy đếm số **số nguyên tố** trong đoạn [a, b].
+### Dữ liệu vào
+- Dòng 1: q (1 ≤ q ≤ 10^5).
+- q dòng tiếp theo: mỗi dòng hai số a, b (1 ≤ a ≤ b ≤ 10^6).
+### Kết quả
+q dòng, mỗi dòng là đáp án tương ứng.
+### Ví dụ
+```
+DEMNT.INP: 2
+           1 10
+           10 20
+DEMNT.OUT: 4
+           4
+```
+@@
+Kiểm tra từng số trong đoạn bằng O(√x) có thể tốn 10^5 × 10^6 × … — quá chậm. Hãy tính trước!
+@@
+Sàng Eratosthenes đến 10^6 (Bài 18), rồi tạo mảng cộng dồn dem[x] = số số nguyên tố ≤ x (Bài 19). Đáp án = dem[b] − dem[a−1].
+@@
+Kết hợp hai kỹ thuật: sàng O(N log log N) một lần, sau đó mỗi câu hỏi O(1). Đây là mẫu "tiền xử lý + trả lời nhanh" rất hay gặp trong đề HSG.
+@@
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1000000;
+bool hop[N + 1];
+int dem[N + 1];
+int main() {
+    freopen("DEMNT.INP", "r", stdin);
+    freopen("DEMNT.OUT", "w", stdout);
+    ios::sync_with_stdio(false); cin.tie(0);
+    hop[0] = hop[1] = true;
+    for (int p = 2; p * p <= N; p++)
+        if (!hop[p])
+            for (int k = p * p; k <= N; k += p) hop[k] = true;
+    for (int x = 1; x <= N; x++) dem[x] = dem[x - 1] + (!hop[x]);
+    int q;
+    cin >> q;
+    while (q--) {
+        int a, b;
+        cin >> a >> b;
+        cout << dem[b] - dem[a - 1] << '\n';
+    }
+    return 0;
+}
+</script>
+<script type="text/plain" id="p3-2">
+### Đề bài
+Câu lạc bộ có n hoạt động, hoạt động thứ i diễn ra từ thời điểm si đến ei. Một bạn chỉ tham gia được một hoạt động tại một thời điểm; hoạt động sau được bắt đầu đúng lúc hoạt động trước kết thúc. Hỏi bạn tham gia được **nhiều nhất bao nhiêu hoạt động**?
+### Dữ liệu vào
+- Dòng 1: n (1 ≤ n ≤ 10^5).
+- n dòng tiếp theo: mỗi dòng hai số si, ei (0 ≤ si < ei ≤ 10^9).
+### Kết quả
+Số hoạt động nhiều nhất.
+### Ví dụ
+```
+CHONVIEC.INP: 5
+              1 3
+              2 5
+              3 6
+              5 7
+              6 8
+CHONVIEC.OUT: 3
+```
+Giải thích: chọn [1, 3], [3, 6], [6, 8].
+@@
+Thử các cách tham lam: chọn hoạt động ngắn nhất trước? bắt đầu sớm nhất trước? Hãy tìm phản ví dụ cho từng cách.
+@@
+Chọn hoạt động **kết thúc sớm nhất** trước (Bài 22): sắp xếp theo e tăng dần, rồi lần lượt chọn hoạt động có s ≥ thời điểm kết thúc của hoạt động vừa chọn.
+@@
+Kết thúc sớm nhất để lại nhiều thời gian nhất cho các hoạt động sau, nên tham lam này cho kết quả tối ưu. Lưu hoạt động bằng `pair` với first = e để `sort` mặc định sắp theo thời điểm kết thúc. Độ phức tạp O(n log n).
+@@
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    freopen("CHONVIEC.INP", "r", stdin);
+    freopen("CHONVIEC.OUT", "w", stdout);
+    int n;
+    cin >> n;
+    vector<pair<int, int>> hd(n);           // (kết thúc, bắt đầu)
+    for (int i = 0; i < n; i++) cin >> hd[i].second >> hd[i].first;
+    sort(hd.begin(), hd.end());
+    int dem = 0, ketThuc = -1;
+    for (auto p : hd)
+        if (p.second >= ketThuc) {
+            dem++;
+            ketThuc = p.first;
+        }
+    cout << dem;
+    return 0;
+}
+</script>
+<script type="text/plain" id="p3-3">
+### Đề bài
+Cầu thang có n bậc, đánh số 1..n; bạn đứng ở mặt đất (bậc 0). Mỗi bước có thể leo lên **1, 2 hoặc 3 bậc**. Có k bậc bị hỏng, không được đặt chân lên. Đếm số cách leo lên đúng bậc n, chia lấy dư cho **10^9 + 7**.
+### Dữ liệu vào
+- Dòng 1: n và k (1 ≤ n ≤ 10^6; 0 ≤ k ≤ n).
+- Dòng 2: k số là các bậc bị hỏng.
+### Kết quả
+Số cách leo, chia dư cho 10^9 + 7.
+### Ví dụ
+```
+CAUTHANG.INP: 5 1
+              3
+CAUTHANG.OUT: 5
+```
+@@
+Gọi f[i] = số cách đứng được trên bậc i. Bậc i có thể đến từ bậc nào?
+@@
+f[i] = f[i−1] + f[i−2] + f[i−3] (bỏ các chỉ số âm); nếu bậc i hỏng thì f[i] = 0. Cơ sở f[0] = 1.
+@@
+Quy hoạch động (Bài 23) O(n). Lấy dư sau mỗi phép cộng để không tràn số; f lưu bằng `long long`. Với ví dụ: f = 1, 1, 2, 0, 3, 5.
+@@
+#include <bits/stdc++.h>
+using namespace std;
+const long long MOD = 1000000007;
+long long f[1000005];
+bool hong[1000005];
+int main() {
+    freopen("CAUTHANG.INP", "r", stdin);
+    freopen("CAUTHANG.OUT", "w", stdout);
+    int n, k;
+    cin >> n >> k;
+    for (int i = 0; i < k; i++) { int x; cin >> x; hong[x] = true; }
+    f[0] = 1;
+    for (int i = 1; i <= n; i++) {
+        if (hong[i]) { f[i] = 0; continue; }
+        for (int b = 1; b <= 3; b++)
+            if (i - b >= 0) f[i] = (f[i] + f[i - b]) % MOD;
+    }
+    cout << f[n];
+    return 0;
+}
+</script>
+<script type="text/plain" id="p3-4">
+### Đề bài
+Có n vị trí trên một con đường thẳng, vị trí thứ i có tọa độ xi. Cần đặt k trạm phát sóng vào k vị trí khác nhau sao cho **khoảng cách nhỏ nhất giữa hai trạm bất kỳ là lớn nhất**. In ra khoảng cách đó.
+### Dữ liệu vào
+- Dòng 1: n và k (2 ≤ k ≤ n ≤ 10^5).
+- Dòng 2: n số nguyên xi đôi một khác nhau (0 ≤ xi ≤ 10^9).
+### Kết quả
+Khoảng cách nhỏ nhất lớn nhất có thể đạt được.
+### Ví dụ
+```
+DATTRAM.INP: 5 3
+             1 2 8 4 9
+DATTRAM.OUT: 3
+```
+Giải thích: đặt tại 1, 4, 8 (hoặc 1, 4, 9).
+@@
+Đổi câu hỏi: "Với khoảng cách D cho trước, có đặt được k trạm mà mọi cặp trạm cách nhau ≥ D không?" — câu hỏi này kiểm tra bằng tham lam trên mảng đã sắp xếp.
+@@
+Nếu đặt được với D thì cũng đặt được với mọi giá trị nhỏ hơn D → tính **đơn điệu** → **chặt nhị phân kết quả** (Bài 20) để tìm D lớn nhất.
+@@
+Sắp xếp x. Hàm check(D): đặt trạm đầu ở x[0], đi tiếp và đặt trạm mới mỗi khi cách trạm vừa đặt ≥ D; đúng nếu đặt được ≥ k trạm. Chặt nhị phân D trong [0, 10^9]. Độ phức tạp O(n log n + n log 10^9).
+@@
+#include <bits/stdc++.h>
+using namespace std;
+int n, k;
+vector<long long> x;
+bool check(long long D) {
+    int dem = 1;
+    long long cuoi = x[0];
+    for (int i = 1; i < n; i++)
+        if (x[i] - cuoi >= D) { dem++; cuoi = x[i]; }
+    return dem >= k;
+}
+int main() {
+    freopen("DATTRAM.INP", "r", stdin);
+    freopen("DATTRAM.OUT", "w", stdout);
+    cin >> n >> k;
+    x.resize(n);
+    for (int i = 0; i < n; i++) cin >> x[i];
+    sort(x.begin(), x.end());
+    long long lo = 0, hi = 1000000000, ans = 0;
+    while (lo <= hi) {
+        long long mid = (lo + hi) / 2;
+        if (check(mid)) { ans = mid; lo = mid + 1; }
+        else hi = mid - 1;
+    }
+    cout << ans;
+    return 0;
+}
+</script>
+<script>
+const DE=[{id:1,t:'Đề luyện tập số 1',lv:'Mức cơ bản',P:[['TONGCS','Tổng chữ số'],['BAUOC','Số ba ước'],['XAUDX','Xâu gần đối xứng'],['DOANCON','Đoạn con tổng lớn nhất']]},
+{id:2,t:'Đề luyện tập số 2',lv:'Mức trung bình',P:[['LICHHOC','Lịch học'],['DEMCAP','Đếm cặp'],['TONGDOAN','Tổng đoạn'],['MECUNG','Mê cung']]},
+{id:3,t:'Đề luyện tập số 3',lv:'Mức nâng cao',P:[['DEMNT','Đếm số nguyên tố'],['CHONVIEC','Chọn hoạt động'],['CAUTHANG','Cầu thang hỏng'],['DATTRAM','Đặt trạm phát sóng']]}];
+let TMR=null;
+function dePage(id){const D=DE[id-1];const sc=store.get('de'+id+'_sc',{});
+ return `<div class="card"><div class="kicker">Giai đoạn 3 · ${D.lv}</div><h2 class="title">${D.t}</h2>
+ <table class="tbl"><tr><th>Bài</th><th>Tên bài</th><th>Tệp chương trình</th><th>Tệp dữ liệu / kết quả</th><th>Điểm</th></tr>${D.P.map((p,i)=>`<tr><td>${i+1}</td><td>${p[1]}</td><td class="mono">${p[0]}.CPP</td><td class="mono">${p[0]}.INP / ${p[0]}.OUT</td><td>5</td></tr>`).join('')}</table>
+ <div class="lab">Thời gian làm bài: 150 phút · Tổng điểm: 20 · Đề do giáo viên biên soạn để luyện tập, bám cấu trúc đề HSG.</div>
+ <div class="row" style="margin-top:12px"><button class="b pri" id="tst">⏱ Bắt đầu tính giờ 150 phút</button><button class="b" id="tsp">Kết thúc</button><span id="clk" class="mono" style="font-size:22px;font-weight:700;color:var(--navy)"></span></div></div>
+ <div class="tabs">${D.P.map((p,i)=>`<button data-pb="${i}" class="${i?'':'on'}">Bài ${i+1}. ${p[0]}</button>`).join('')}</div><div class="card" id="pb"></div>
+ <div class="card"><h3>Tự chấm điểm</h3><div class="lab">Sau khi chạy thử với ví dụ và tự tạo thêm test, em ước lượng mình làm được bao nhiêu phần mỗi bài:</div>
+ ${D.P.map((p,i)=>`<div class="row"><span style="width:170px">Bài ${i+1}. ${p[0]}</span><select data-sc="${i}">${[0,25,50,75,100].map(v=>`<option value="${v}" ${+sc[i]===v?'selected':''}>${v}%</option>`).join('')}</select></div>`).join('')}<div class="score" id="tot" style="background:#eff6ff;color:var(--navy)"></div></div>`}
+function deInit(id){const D=DE[id-1],key='de'+id+'_t0';
+ const show=i=>{const parts=$('#p'+id+'-'+(i+1)).textContent.split('\n@@\n');document.querySelectorAll('[data-pb]').forEach(b=>b.classList.toggle('on',+b.dataset.pb===i));
+  $('#pb').innerHTML=`<div class="kicker">Bài ${i+1} · ${D.P[i][0]}</div><h2 class="title" style="font-size:24px">${D.P[i][1]}</h2>${md(parts[0])}
+  <div class="row" style="margin-top:14px"><button class="b" data-h="1">💡 Gợi ý 1</button><button class="b" data-h="2">💡 Gợi ý 2</button><button class="b" data-h="3">🔑 Xem lời giải</button></div><div id="hx"></div>`;
+  $('#pb').onclick=e=>{const k=e.target.dataset.h;if(!k)return;
+   if(k==='3'&&!e.target.dataset.ok){e.target.dataset.ok=1;e.target.textContent='🔑 Em đã làm xong, mở lời giải';$('#hx').innerHTML='<div class="note">Hãy tự làm hết sức trước khi xem lời giải — bấm lần nữa để mở.</div>';return}
+   $('#hx').innerHTML=k==='3'?`<h3>Hướng giải</h3>${md(parts[3])}<h3>Chương trình tham khảo</h3><pre class="code">${hl(parts[4].replace(/\s+$/,''))}</pre>`:`<div class="note"><b>Gợi ý ${k}:</b> ${inl(parts[k]).trim()}</div>`}};
+ document.querySelector('.tabs').onclick=e=>{if(e.target.dataset.pb)show(+e.target.dataset.pb)};show(0);
+ const tot=()=>{const s=store.get('de'+id+'_sc',{});let t=0;D.P.forEach((_,i)=>t+=(+s[i]||0)/100*5);$('#tot').textContent=`Tổng điểm tự chấm: ${t.toFixed(2).replace(/\.?0+$/,'')} / 20`};
+ document.querySelectorAll('[data-sc]').forEach(el=>el.onchange=()=>{const s=store.get('de'+id+'_sc',{});s[el.dataset.sc]=+el.value;store.set('de'+id+'_sc',s);tot()});tot();
+ const tick=()=>{const t0=store.get(key,null);if(!t0){$('#clk').textContent='';return}const r=150*60-Math.floor((Date.now()-t0)/1000);if(r<=0){$('#clk').innerHTML='<span class="bad">Hết giờ!</span>';return}$('#clk').textContent=`Còn ${String(Math.floor(r/3600))}:${String(Math.floor(r%3600/60)).padStart(2,'0')}:${String(r%60).padStart(2,'0')}`};
+ $('#tst').onclick=()=>{store.set(key,Date.now());tick()};$('#tsp').onclick=()=>{store.set(key,null);tick()};clearInterval(TMR);TMR=setInterval(tick,1000);tick()}
+function tongOn(){return `<div class="card"><div class="kicker">Giai đoạn 3</div><h2 class="title">Thi thử trắc nghiệm tổng hợp</h2><p>Câu hỏi được rút ngẫu nhiên từ ngân hàng trắc nghiệm của tất cả các bài. Mỗi câu 1 phút.</p>
+ <div class="row"><label class="lab">Phạm vi <select id="pv"><option value="1-12">Giai đoạn 1 (Bài 1–12)</option><option value="13-24">Giai đoạn 2 (Bài 13–24)</option><option value="1-24" selected>Cả hai giai đoạn</option></select></label><label class="lab">Số câu <select id="sc"><option>10</option><option selected>20</option><option>30</option></select></label><button class="b pri" id="go">Bắt đầu làm bài</button><span id="clk" class="mono" style="font-size:20px;font-weight:700;color:var(--navy)"></span></div></div><div id="mq"></div>`}
+function tongOnInit(){$('#go').onclick=()=>{const [a,z]=$('#pv').value.split('-').map(Number),n=+$('#sc').value;let pool=[];for(let c=a;c<=z;c++)Q[c].forEach(q=>pool.push([c,...q]));
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}const qs=pool.slice(0,n).map(([c,q,code,o,ans,ex])=>{const ord=o.map((t,k)=>[t,k===ans]);for(let i=ord.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ord[i],ord[j]]=[ord[j],ord[i]]}return{c,q,code,ord,ex}});
+  const pick={};let done=false;const end=Date.now()+n*60000,b=$('#mq');
+  b.innerHTML=`<div class="card">${qs.map((x,i)=>`<div class="q" data-q="${i}"><div class="qt">Câu ${i+1}. <span class="lab">[Bài ${x.c}]</span> ${x.q}</div>${x.code?`<pre class="code">${hl(x.code)}</pre>`:''}${x.ord.map((o,k)=>`<div class="opt" data-k="${k}"><span class="lt">${'ABCD'[k]}.</span><span>${esc(o[0])}</span></div>`).join('')}<div class="ex">💡 ${x.ex}</div></div>`).join('')}<div class="row"><button class="b pri" id="sub">Nộp bài</button></div><div id="res"></div></div>`;
+  const finish=()=>{if(done)return;done=true;clearInterval(TMR);let s=0;const sai={};b.querySelectorAll('.q').forEach(q=>{const i=q.dataset.q,x=qs[i];q.classList.add('done');q.querySelectorAll('.opt').forEach((o,k)=>{if(x.ord[k][1])o.classList.add('ok');else if(pick[i]===k)o.classList.add('no')});if(pick[i]!==undefined&&x.ord[pick[i]][1])s++;else sai[x.c]=(sai[x.c]||0)+1});
+   const d=Math.round(s/n*100)/10;$('#clk').textContent='';$('#res').innerHTML=`<div class="score" style="background:${s/n>=.8?'var(--okb)':'#fef3c7'}">Kết quả: ${s}/${n} câu đúng — ${d} điểm (thang 10).</div>${Object.keys(sai).length?`<div class="note">Cần ôn lại: ${Object.entries(sai).map(([c,k])=>`<a href="#ch${c}">Bài ${c}. ${CH[c-1][1]}</a> (sai ${k})`).join(' · ')}</div>`:''}`};
+  b.onclick=e=>{const o=e.target.closest('.opt');if(o&&!done){const q=o.closest('.q');q.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));o.classList.add('sel');pick[q.dataset.q]=+o.dataset.k}if(e.target.id==='sub')finish()};
+  clearInterval(TMR);TMR=setInterval(()=>{const r=Math.ceil((end-Date.now())/1000);if(r<=0){finish();return}$('#clk').textContent=`⏱ ${Math.floor(r/60)}:${String(r%60).padStart(2,'0')}`},500);b.scrollIntoView({behavior:'smooth'})}}
+</script>
+
+<script>
+/* ================= TIỆN ÍCH ================= */
+const $=(s,r=document)=>r.querySelector(s), esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const KW="int|long|double|float|char|bool|string|void|return|if|else|for|while|do|break|continue|switch|case|default|const|struct|using|namespace|true|false|auto|vector|pair|cin|cout|endl|greater|sort|reverse|getline";
+const RX=new RegExp(`(\\/\\/.*$)|("(?:\\\\.|[^"\\\\])*"|'(?:\\\\.|[^'\\\\])*')|(^\\s*#\\s*\\w+.*$)|(\\b\\d+(?:\\.\\d+)?\\b)|(\\b(?:${KW})\\b)`,"gm");
+function hl(src){let o="",i=0,m;RX.lastIndex=0;while((m=RX.exec(src))){o+=esc(src.slice(i,m.index));const cls=m[1]?'c':m[2]?'s':m[3]?'p':m[4]?'d':'k';o+=`<span class="${cls}">${esc(m[0])}</span>`;i=RX.lastIndex}return o+esc(src.slice(i))}
+const inl=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
+function md(t){const L=t.replace(/^\n+|\s+$/g,'').split('\n');let h='',i=0;
+ while(i<L.length){let l=L[i];
+  if(l.startsWith('```')){let c=[];i++;while(i<L.length&&!L[i].startsWith('```'))c.push(L[i++]);i++;h+=`<pre class="code">${hl(c.join('\n'))}</pre>`;continue}
+  if(l.startsWith('### ')){h+=`<h3>${inl(l.slice(4))}</h3>`;i++;continue}
+  if(l.startsWith('- ')){h+='<ul>';while(i<L.length&&L[i].startsWith('- '))h+=`<li>${inl(L[i++].slice(2))}</li>`;h+='</ul>';continue}
+  if(l.startsWith('> ')){h+=`<div class="note">💡 ${inl(l.slice(2))}</div>`;i++;continue}
+  if(l.trim())h+=`<p>${inl(l)}</p>`;i++}
+ return h}
+const store={get(k,d){try{return JSON.parse(localStorage.getItem('cpphsg_'+k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem('cpphsg_'+k,JSON.stringify(v))}catch(e){}}};
+
+/* ================= BỘ CHẠY TỪNG BƯỚC (TRACER) ================= */
+function Tracer(host,cfg){
+ const ins=(cfg.inputs||[]).map(p=>p.opts?`<label class="lab">${p.label} <select data-id="${p.id}">${p.opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select></label>`:`<label class="lab">${p.label} <input data-id="${p.id}" value="${p.val}" style="width:${p.w||90}px"></label>`).join('');
+ host.innerHTML=`<div class="row">${ins}<button class="b" data-a="load">Nạp dữ liệu</button></div>
+ <div class="tr-grid"><div class="tr-code"></div><div><div class="arr"></div><table class="vars"></table><div class="out"></div></div></div>
+ <div class="tnote"></div>
+ <div class="ctl"><button class="b" data-a="reset">⟲ Đặt lại</button><button class="b" data-a="prev">◀ Lùi</button><button class="b pri" data-a="next">Bước tiếp ▶</button><button class="b" data-a="play">▶▶ Tự chạy</button><span class="pos"></span></div>`;
+ let steps=[],k=0,timer=null;
+ const code=()=>typeof cfg.code==='function'?cfg.code(vals()):cfg.code;
+ const vals=()=>{const v={};host.querySelectorAll('[data-id]').forEach(e=>v[e.dataset.id]=e.value);return v};
+ function load(){stop();const r=cfg.gen(vals());if(typeof r==='string'){steps=[{l:-1,v:{},o:'',n:'⚠️ '+r}]}else steps=r;k=0;draw()}
+ function draw(){const st=steps[k],pv=steps[k-1]||{v:{}};
+  $('.tr-code',host).innerHTML=code().map((s,i)=>`<div class="ln ${i===st.l?'on':''}"><span class="no">${i+1}</span><span>${hl(s)||' '}</span></div>`).join('');
+  const ve=Object.entries(st.v);$('.vars',host).innerHTML=ve.length?'<tr><th>Biến</th><td style="font-family:inherit;font-weight:600;background:#f1f5f9">Giá trị</td></tr>'+ve.map(([a,b])=>`<tr class="${pv.v[a]!==b?'chg':''}"><th class="mono">${esc(a)}</th><td>${esc(b)}</td></tr>`).join(''):'';
+  const row=(A,hi,mk,rg)=>A.map((x,i)=>`<div class="cell ${i===hi?'hi':''} ${i===mk?'mk':''} ${rg&&(i<rg[0]||i>rg[1])?'dim':''}">${esc(x)}<small>[${i}]</small></div>`).join('');
+  $('.arr',host).innerHTML=st.arr?(st.l1?`<div class="lab" style="width:100%">${st.l1}</div>`:'')+row(st.arr,st.hi,st.mk,st.rg)+(st.arr2?`<div class="lab" style="width:100%">${st.l2||''}</div>`+row(st.arr2,st.hi2,-1):''):'';
+  $('.out',host).textContent=st.o||'';
+  $('.tnote',host).innerHTML=st.n?inl(st.n):'Nhấn <b>Bước tiếp ▶</b> để chạy từng dòng lệnh.';
+  $('.pos',host).textContent=`Bước ${k+1}/${steps.length}`}
+ function stop(){clearInterval(timer);timer=null;const b=$('[data-a=play]',host);if(b)b.textContent='▶▶ Tự chạy'}
+ host.addEventListener('click',e=>{const a=e.target.dataset.a;if(!a)return;
+  if(a==='load'||a==='reset')load();
+  if(a==='next'&&k<steps.length-1){k++;draw()}
+  if(a==='prev'&&k>0){k--;draw()}
+  if(a==='play'){if(timer)return stop();e.target.textContent='⏸ Dừng';timer=setInterval(()=>{if(k>=steps.length-1)return stop();k++;draw()},700)}});
+ host.addEventListener('change',e=>{if(e.target.dataset.id)load()});
+ load();
+}
+function mk(){const steps=[];let out='';return{steps,P:(l,n,v,x={})=>steps.push({l,n,v:{...v},o:out,...x}),O:s=>out+=s}}
+const num=(s,lo,hi)=>{const x=Number(s);return Number.isInteger(x)&&x>=lo&&x<=hi?x:null};
+
+/* ================= MINH HỌA TỪNG CHƯƠNG ================= */
+const VIZ={
+1:{t:'Giải phẫu chương trình — bấm vào từng dòng',f(h){
+ const L=['#include <iostream>','using namespace std;','','int main() {','    cout << "Xin chao!" << \'\\n\';','    return 0;','}'];
+ const E=['Nạp thư viện <b>iostream</b> (input/output stream) để dùng <code>cin</code> và <code>cout</code>.','Dùng không gian tên <b>std</b>: viết <code>cout</code> thay vì <code>std::cout</code>.','Dòng trống — chỉ để code dễ đọc, không ảnh hưởng chương trình.','Khai báo <b>hàm main</b>. Mọi chương trình C++ bắt đầu chạy từ đây. Dấu <code>{</code> mở đầu thân hàm.','<code>cout</code> in xâu "Xin chao!" ra màn hình, rồi in <code>\'\\n\'</code> để xuống dòng. Dòng kết thúc bằng <code>;</code>.','Kết thúc hàm main và trả về 0 — báo cho hệ điều hành biết chương trình chạy <b>thành công</b>.','Dấu <code>}</code> đóng thân hàm main.'];
+ h.innerHTML=`<div class="tr-grid"><div class="tr-code anat">${L.map((s,i)=>`<div class="ln" data-i="${i}"><span class="no">${i+1}</span><span>${hl(s)||' '}</span></div>`).join('')}</div><div><div class="tnote" id="an">👈 Bấm vào một dòng code để xem giải thích.</div><div class="out" id="ao"></div><div class="row"><button class="b pri" id="ar">▶ Chạy chương trình</button></div></div></div>`;
+ h.querySelectorAll('.ln').forEach(d=>d.onclick=()=>{h.querySelectorAll('.ln').forEach(x=>x.classList.remove('on'));d.classList.add('on');$('#an',h).innerHTML=`<b>Dòng ${+d.dataset.i+1}:</b> `+E[d.dataset.i]});
+ $('#ar',h).onclick=()=>$('#ao',h).textContent='Xin chao!';}},
+2:{t:'Hộp biến và lỗi tràn số',f(h){
+ const T={int:['4 byte','-2147483648','2147483647','Số nguyên thông thường'],'long long':['8 byte','-9223372036854775808','9223372036854775807','Số nguyên lớn (đến ~9,2×10^18)']};
+ h.innerHTML=`<p class="lab">Nhập một số nguyên, xem nó có "vừa" với hộp <code>int</code> và <code>long long</code> không.</p>
+ <div class="row"><label class="lab">Giá trị <input id="v2" value="3000000000" style="width:220px"></label></div><div id="bx" class="row" style="align-items:stretch"></div>
+ <h3>Thử nghiệm tràn số</h3><pre class="code">${hl('int x = 2147483647;   // giá trị lớn nhất của int\nx = x + 1;\ncout << x;')}</pre>
+ <div class="row"><button class="b pri" id="of">Chạy thử</button><span id="ofr" class="mono"></span></div>`;
+ function upd(){let v;try{v=BigInt($('#v2',h).value.trim())}catch(e){$('#bx',h).innerHTML='<span class="bad">Hãy nhập một số nguyên hợp lệ.</span>';return}
+  $('#bx',h).innerHTML=Object.entries(T).map(([k,[sz,lo,hi,d]])=>{const ok=v>=BigInt(lo)&&v<=BigInt(hi);return `<div class="card" style="margin:0;flex:1;min-width:230px;border:2px solid ${ok?'#86efac':'#fca5a5'}"><div class="mono" style="font-weight:700;color:var(--navy)">${k} x = ${v};</div><div class="lab">${d} · ${sz}<br>Phạm vi: ${lo} → ${hi}</div><div style="margin-top:6px;font-weight:600" class="${ok?'ok':'bad'}">${ok?'✔ Vừa hộp, lưu đúng':'✘ Không vừa → TRÀN SỐ, giá trị bị sai'}</div></div>`}).join('')}
+ $('#v2',h).oninput=upd;upd();
+ $('#of',h).onclick=()=>$('#ofr',h).innerHTML=`Màn hình: <b class="bad">${(2147483647+1)|0}</b> — vượt quá giới hạn nên "quay vòng" về số âm nhỏ nhất!`;}},
+3:{t:'Máy tính phép chia nguyên và chia dư',f(h){
+ h.innerHTML=`<div class="row"><label class="lab">int a = <input id="a3" value="17" style="width:90px"></label><label class="lab">int b = <input id="b3" value="5" style="width:90px"></label></div><table class="tbl" id="r3"></table>
+ <h3>Đổi N giây sang giờ – phút – giây</h3><div class="row"><label class="lab">N = <input id="n3" value="3725" style="width:120px"></label></div><div id="s3"></div>`;
+ function c(){const a=num($('#a3',h).value,-1e9,1e9),b=num($('#b3',h).value,-1e9,1e9);if(a===null||b===null||b===0){$('#r3',h).innerHTML='<tr><td class="bad">Nhập 2 số nguyên, b khác 0.</td></tr>';return}
+  const q=Math.trunc(a/b),r=a-q*b;const R=[['a / b',q,'Cả hai là số nguyên → chỉ lấy phần nguyên'],['a % b',r,'Phần dư; dấu theo a'],['(double) a / b',+(a/b).toFixed(6),'Ép kiểu sang số thực → chia "thật"'],['a / b * b + a % b',q*b+r,'Luôn bằng a — dùng để kiểm tra'],['a % 2 == 0',r===r&&(a%2===0)?'true':'false','a có chẵn không?']];
+  $('#r3',h).innerHTML='<tr><th>Biểu thức</th><th>Kết quả</th><th>Giải thích</th></tr>'+R.map(x=>`<tr><td class="mono">${x[0]}</td><td class="mono"><b>${x[1]}</b></td><td>${x[2]}</td></tr>`).join('')}
+ function s(){const n=num($('#n3',h).value,0,1e9);if(n===null){$('#s3',h).innerHTML='<span class="bad">Nhập số nguyên không âm.</span>';return}
+  const g=Math.floor(n/3600),p=Math.floor(n%3600/60),gi=n%60;
+  $('#s3',h).innerHTML=`<table class="tbl"><tr><th>Bước</th><th>Biểu thức</th><th>Kết quả</th></tr><tr><td>Giờ</td><td class="mono">${n} / 3600</td><td><b>${g}</b></td></tr><tr><td>Phần giây lẻ ngoài các giờ</td><td class="mono">${n} % 3600</td><td>${n%3600}</td></tr><tr><td>Phút</td><td class="mono">${n} % 3600 / 60</td><td><b>${p}</b></td></tr><tr><td>Giây</td><td class="mono">${n} % 60</td><td><b>${gi}</b></td></tr></table><div class="note">Kết quả: <b>${g} giờ ${p} phút ${gi} giây</b>. Nếu viết sai <code>${n} / 60</code> sẽ ra ${Math.floor(n/60)} — đó là <i>tổng số phút</i>, không phải số phút lẻ.</div>`}
+ h.addEventListener('input',()=>{c();s()});c();s();}},
+4:{t:'Chạy từng bước câu lệnh if – else if',f(h){Tracer(h,{inputs:[{id:'d',label:'double d =',val:'7.2'}],
+ code:['double d;','cin >> d;','if (d >= 8) cout << "Gioi";','else if (d >= 6.5) cout << "Kha";','else if (d >= 5) cout << "Trung binh";','else cout << "Yeu";'],
+ gen(v){const d=Number(v.d);if(!isFinite(d)||v.d.trim()==='')return'Hãy nhập một số.';const {steps,P,O}=mk(),V={d};P(1,`Nhập d = ${d}`,V);
+  const C=[[8,'Gioi',2],[6.5,'Kha',3],[5,'Trung binh',4]];for(const [m,s,l] of C){const ok=d>=m;P(l,`Kiểm tra \`${d} >= ${m}\` → **${ok?'đúng':'sai'}**${ok?'':', chuyển xuống nhánh tiếp theo'}`,V);if(ok){O(s);P(l,`In ra "${s}" và **bỏ qua tất cả các nhánh còn lại**.`,V);return steps}}
+  O('Yeu');P(5,'Mọi điều kiện đều sai → chạy nhánh `else`, in "Yeu".',V);return steps}})}},
+5:{t:'Chạy từng bước vòng lặp for',f(h){Tracer(h,{inputs:[{id:'a',label:'a =',val:'1',w:60},{id:'b',label:'b =',val:'5',w:60}],
+ code:['int s = 0;','for (int i = a; i <= b; i++) {','    s = s + i;','}','cout << s;'],
+ gen(v){const a=num(v.a,-50,50),b=num(v.b,-50,50);if(a===null||b===null)return'Nhập a, b là số nguyên trong [-50, 50].';if(b-a>15)return'Để dễ quan sát, hãy chọn b − a ≤ 15.';
+  const {steps,P,O}=mk();let s=0,i=a;P(0,'Khởi tạo biến tổng `s = 0`.',{s});P(1,`**Khởi tạo** \`i = ${a}\` (chỉ làm 1 lần).`,{s,i});
+  while(true){const ok=i<=b;P(1,`**Kiểm tra** \`${i} <= ${b}\` → ${ok?'đúng, vào thân vòng lặp':'**sai, thoát vòng lặp**'}.`,{s,i});if(!ok)break;
+   const o=s;s+=i;P(2,`\`s = ${o} + ${i} = ${s}\``,{s,i});i++;P(1,`**Bước nhảy** \`i++\` → i = ${i}.`,{s,i})}
+  O(String(s));P(4,`In kết quả s = ${s}. Thân vòng lặp đã chạy ${Math.max(0,b-a+1)} lần.`,{s});return steps}})}},
+6:{t:'Chạy từng bước vòng lặp while: tính tổng chữ số',f(h){Tracer(h,{inputs:[{id:'n',label:'n =',val:'2026',w:120}],
+ code:['int n, tong = 0;','cin >> n;','while (n > 0) {','    tong += n % 10;','    n /= 10;','}','cout << tong;'],
+ gen(v){let n=num(v.n,0,999999999);if(n===null)return'Nhập số nguyên không âm (tối đa 9 chữ số).';const {steps,P,O}=mk();let tong=0;P(0,'Khai báo n và tong = 0.',{n:'?',tong});P(1,`Nhập n = ${n}.`,{n,tong});let lan=0;
+  while(true){const ok=n>0;P(2,`Kiểm tra \`${n} > 0\` → ${ok?'đúng':'**sai, dừng lặp**'}.`,{n,tong});if(!ok)break;lan++;
+   const d=n%10;tong+=d;P(3,`Chữ số cuối: \`${n} % 10 = ${d}\` → tong = ${tong}.`,{n,tong});n=Math.floor(n/10);P(4,`Bỏ chữ số cuối: \`n /= 10\` → n = ${n}.`,{n,tong})}
+  O(String(tong));P(6,`In tong = ${tong}. Vòng lặp chạy ${lan} lần = số chữ số của n.`,{n,tong});return steps}})}},
+7:{t:'Tham trị và tham chiếu — hàm đổi chỗ',f(h){
+ const mkCode=r=>[`void doiCho(int ${r?'&':''}x, int ${r?'&':''}y) {`,'    int t = x;','    x = y;','    y = t;','}','int main() {','    int a = 3, b = 7;','    doiCho(a, b);','    cout << a << " " << b;','}'];
+ Tracer(h,{inputs:[{id:'m',label:'Cách truyền:',opts:[['0','Tham trị (int x)'],['1','Tham chiếu (int &x)']]}],code:v=>mkCode(v.m==='1'),
+ gen(v){const r=v.m==='1',{steps,P,O}=mk();let a=3,b=7;const M=()=>({'a (main)':a,'b (main)':b});P(6,'Trong main: tạo a = 3, b = 7.',M());P(7,'Gọi hàm `doiCho(a, b)`.',M());
+  if(!r){let x=a,y=b,t;const F=()=>({...M(),'x (doiCho)':x,'y (doiCho)':y,...(t!==undefined?{'t (doiCho)':t}:{})});P(0,'**Tham trị**: x, y là **bản sao** của a, b — hai ô nhớ mới.',F());t=x;P(1,'t = x = 3.',F());x=y;P(2,'x = y = 7. Chỉ bản sao x đổi, **a vẫn là 3**.',F());y=t;P(3,'y = t = 3. **b vẫn là 7**.',F());P(4,'Kết thúc hàm: x, y, t bị **xóa**.',M())}
+  else{let t;const F=()=>({...M(),'x (doiCho)':`→ a (${a})`,'y (doiCho)':`→ b (${b})`,...(t!==undefined?{'t (doiCho)':t}:{})});P(0,'**Tham chiếu**: x là **tên khác** của a, y là tên khác của b — không tạo bản sao.',F());t=a;P(1,'t = x = 3.',F());a=b;P(2,'x = y → thực chất **a = 7**.',F());b=t;P(3,'y = t → thực chất **b = 3**.',F());P(4,'Kết thúc hàm: t bị xóa, nhưng a và b **đã đổi chỗ**.',M())}
+  O(`${a} ${b}`);P(8,r?'In ra `7 3` — đổi chỗ thành công.':'In ra `3 7` — **không đổi chỗ được**! Muốn đổi, cần truyền tham chiếu `int &x`.',M());return steps}})}},
+8:{t:'Chạy từng bước: tìm giá trị lớn nhất trong mảng',f(h){Tracer(h,{inputs:[{id:'a',label:'Mảng a =',val:'4 9 2 7 11 5',w:220}],
+ code:['int mx = a[0];','for (int i = 1; i < n; i++)','    if (a[i] > mx)','        mx = a[i];','cout << mx;'],
+ gen(v){const a=v.a.trim().split(/[\s,]+/).map(Number);if(!a.length||a.length>12||a.some(x=>!Number.isInteger(x)))return'Nhập 1–12 số nguyên, cách nhau bởi dấu cách.';
+  const n=a.length,{steps,P,O}=mk();let mx=a[0],p=0;const X=(hi)=>({arr:a,hi,mk:p});P(0,`Khởi tạo mx = a[0] = ${mx} (ô vàng là vị trí max hiện tại).`,{n,mx},X(0));
+  for(let i=1;;i++){const ok=i<n;P(1,`Kiểm tra \`i < n\`: ${i} < ${n} → ${ok?'đúng':'**sai, dừng**'}.`,{n,i,mx},X(ok?i:-1));if(!ok)break;
+   const g=a[i]>mx;P(2,`So sánh a[${i}] = ${a[i]} > mx = ${mx}? → ${g?'**đúng**':'sai'}.`,{n,i,mx},X(i));if(g){mx=a[i];p=i;P(3,`Cập nhật mx = ${mx}.`,{n,i,mx},X(i))}}
+  O(String(mx));P(4,`In mx = ${mx}, nằm ở vị trí a[${p}].`,{n,mx},X(-1));return steps}})}},
+9:{t:'Khám phá mảng hai chiều',f(h){
+ let n=4,A=[];const gen=()=>{A=Array.from({length:n},()=>Array.from({length:n},()=>1+Math.floor(Math.random()*9)))};gen();let mode='cell',sel=[0,0];
+ const M={row:['Hàng i','for (int j = 0; j < n; j++) s += a[i][j];'],col:['Cột j','for (int i = 0; i < n; i++) s += a[i][j];'],main:['Chéo chính','for (int i = 0; i < n; i++) s += a[i][i];   // i == j'],sub:['Chéo phụ','for (int i = 0; i < n; i++) s += a[i][n-1-i];   // i + j == n-1'],nb:['4 ô kề','// (i-1,j) (i+1,j) (i,j-1) (i,j+1)']};
+ h.innerHTML=`<div class="row"><label class="lab">Kích thước n = <select id="n9">${[3,4,5,6].map(x=>`<option ${x===4?'selected':''}>${x}</option>`).join('')}</select></label><button class="b" id="rn">🎲 Giá trị mới</button></div>
+ <div class="row">${Object.entries(M).map(([k,v])=>`<button class="b" data-m="${k}">${v[0]}</button>`).join('')}</div><div class="lab">Bấm vào một ô để chọn (i, j).</div><div id="g9"></div><div id="i9"></div>`;
+ function inSet(i,j){const [r,c]=sel;return mode==='row'?i===r:mode==='col'?j===c:mode==='main'?i===j:mode==='sub'?i+j===n-1:mode==='nb'?Math.abs(i-r)+Math.abs(j-c)===1:false}
+ function draw(){let g=`<div class="g2" style="grid-template-columns:30px repeat(${n},auto)"><div></div>${A[0].map((_,j)=>`<div class="hd">j=${j}</div>`).join('')}`;let s=0,cnt=0;
+  A.forEach((r,i)=>{g+=`<div class="hd">i=${i}</div>`;r.forEach((x,j)=>{const on=inSet(i,j),me=i===sel[0]&&j===sel[1];if(on){s+=x;cnt++}g+=`<div class="cell ${on?'hi':''} ${me?'mk':''}" data-i="${i}" data-j="${j}">${x}</div>`})});
+  $('#g9',h).innerHTML=g+'</div>';
+  $('#i9',h).innerHTML=mode==='cell'?`<div class="note">Ô đang chọn: <code>a[${sel[0]}][${sel[1]}] = ${A[sel[0]][sel[1]]}</code> — hàng ${sel[0]}, cột ${sel[1]}.</div>`:`<pre class="code">${hl(M[mode][1])}</pre><div class="note">${M[mode][0]}${mode==='row'?' i = '+sel[0]:mode==='col'?' j = '+sel[1]:mode==='nb'?' của ô ('+sel[0]+', '+sel[1]+')':''}: ${cnt} ô, tổng = <b>${s}</b>.</div>`}
+ h.addEventListener('click',e=>{const t=e.target;if(t.dataset.m){mode=t.dataset.m;draw()}if(t.dataset.i!==undefined){sel=[+t.dataset.i,+t.dataset.j];if(['main','sub'].includes(mode))mode='cell';draw()}if(t.id==='rn'){gen();draw()}});
+ $('#n9',h).onchange=e=>{n=+e.target.value;sel=[0,0];gen();draw()};draw();}},
+10:{t:'Phòng thí nghiệm xâu ký tự',f(h){
+ h.innerHTML=`<div class="row"><label class="lab">string s = <input id="s10" value="Tin hoc 2026" style="width:240px"></label></div><div class="arr" id="c10"></div>
+ <div class="row">${[['size','s.size()'],['rev','reverse(s)'],['up','in hoa'],['dig','đếm chữ số'],['sum','tổng chữ số'],['find','s.find("hoc")'],['sub','s.substr(0, 3)']].map(x=>`<button class="b" data-o="${x[0]}">${x[1]}</button>`).join('')}</div><div id="r10"></div>`;
+ let hi=[];const S=()=>$('#s10',h).value;
+ function cells(){$('#c10',h).innerHTML=[...S()].map((c,i)=>`<div class="cell ${hi.includes(i)?'hi':''}">${c===' '?'␣':esc(c)}<small>[${i}] ${c.charCodeAt(0)}</small></div>`).join('')}
+ const R=(code,res,note)=>$('#r10',h).innerHTML=`<pre class="code">${hl(code)}</pre><div class="note">Kết quả: <b class="mono">${esc(res)}</b>${note?' — '+note:''}</div>`;
+ h.addEventListener('click',e=>{const o=e.target.dataset.o;if(!o)return;const s=S();hi=[];
+  if(o==='size')R('cout << s.size();',s.length,'tính cả dấu cách; chỉ số từ 0 đến '+(s.length-1));
+  if(o==='rev')R('reverse(s.begin(), s.end());',[...s].reverse().join(''));
+  if(o==='up')R('for (char &c : s)\n    if (c >= \'a\' && c <= \'z\') c = c - \'a\' + \'A\';',s.replace(/[a-z]/g,c=>c.toUpperCase()),'chữ thường cách chữ hoa 32 đơn vị mã ASCII');
+  if(o==='dig'){[...s].forEach((c,i)=>{if(c>='0'&&c<='9')hi.push(i)});R("int dem = 0;\nfor (char c : s)\n    if (c >= '0' && c <= '9') dem++;",hi.length,'các ô xanh là chữ số')}
+  if(o==='sum'){let t=0;[...s].forEach((c,i)=>{if(c>='0'&&c<='9'){hi.push(i);t+=c.charCodeAt(0)-48}});R("int tong = 0;\nfor (char c : s)\n    if (c >= '0' && c <= '9') tong += c - '0';",t,"c - '0' đổi ký tự số thành giá trị số")}
+  if(o==='find'){const p=s.indexOf('hoc');if(p>=0)hi=[p,p+1,p+2];R('cout << s.find("hoc");',p>=0?p:'string::npos','không tìm thấy thì trả về npos')}
+  if(o==='sub'){hi=[0,1,2].filter(i=>i<s.length);R('cout << s.substr(0, 3);',s.substr(0,3),'lấy 3 ký tự bắt đầu từ vị trí 0')}
+  cells()});
+ $('#s10',h).oninput=()=>{hi=[];cells()};cells();}},
+11:{t:'Thao tác trên vector',f(h){
+ let v=[5,2,8],log=['vector<int> v = {5, 2, 8};'];
+ h.innerHTML=`<div class="row"><label class="lab">x = <input id="x11" value="6" style="width:70px"></label><button class="b" data-o="push">v.push_back(x)</button><button class="b" data-o="pop">v.pop_back()</button><button class="b" data-o="sort">sort tăng</button><button class="b" data-o="sortd">sort giảm</button><button class="b" data-o="rev">reverse</button><button class="b" data-o="clr">v.clear()</button></div>
+ <div class="arr" id="v11"></div><div id="i11" class="lab"></div><pre class="code" id="l11"></pre>`;
+ function draw(hi){$('#v11',h).innerHTML=v.length?v.map((x,i)=>`<div class="cell ${i===hi?'hi':''}">${x}<small>[${i}]</small></div>`).join(''):'<i class="lab">(vector rỗng)</i>';
+  $('#i11',h).innerHTML=`v.size() = <b>${v.length}</b>`+(v.length?` · v.front() = <b>${v[0]}</b> · v.back() = <b>${v[v.length-1]}</b> · *max_element = <b>${Math.max(...v)}</b>`:'');
+  $('#l11',h).innerHTML=hl(log.slice(-8).join('\n'))}
+ h.addEventListener('click',e=>{const o=e.target.dataset.o;if(!o)return;let hi;
+  if(o==='push'){const x=num($('#x11',h).value,-999,999);if(x===null||v.length>=12)return;v.push(x);hi=v.length-1;log.push(`v.push_back(${x});`)}
+  if(o==='pop'){if(!v.length){log.push('v.pop_back();   // LỖI: vector rỗng!')}else{v.pop();log.push('v.pop_back();')}}
+  if(o==='sort'){v.sort((a,b)=>a-b);log.push('sort(v.begin(), v.end());')}
+  if(o==='sortd'){v.sort((a,b)=>b-a);log.push('sort(v.begin(), v.end(), greater<int>());')}
+  if(o==='rev'){v.reverse();log.push('reverse(v.begin(), v.end());')}
+  if(o==='clr'){v=[];log.push('v.clear();')}
+  draw(hi)});draw();}},
+12:{t:'Sắp xếp danh sách học sinh với hàm so sánh',f(h){
+ const D=[['Binh',8.5],['An',9.0],['Khoa',7.5],['Ha',8.5],['Dung',9.0],['Chi',7.5]];
+ const C={d:['Điểm giảm dần','return a.diem > b.diem;',(a,b)=>b[1]-a[1]],dt:['Điểm giảm, bằng điểm thì tên tăng','if (a.diem != b.diem) return a.diem > b.diem;\nreturn a.ten < b.ten;',(a,b)=>b[1]-a[1]||(a[0]<b[0]?-1:1)],t:['Tên tăng dần (từ điển)','return a.ten < b.ten;',(a,b)=>a[0]<b[0]?-1:1]};
+ h.innerHTML=`<pre class="code">${hl('struct HocSinh { string ten; double diem; };')}</pre><div class="row">${Object.entries(C).map(([k,v])=>`<button class="b" data-c="${k}">${v[0]}</button>`).join('')}<button class="b" data-c="0">Ban đầu</button></div><div class="tr-grid"><div id="t12"></div><div id="c12"></div></div>`;
+ function draw(k){const L=k&&k!=='0'?[...D].sort(C[k][2]):D;
+  $('#t12',h).innerHTML=`<table class="tbl"><tr><th>ds[i]</th><th>ten</th><th>diem</th></tr>${L.map((x,i)=>`<tr><td class="mono">${i}</td><td>${x[0]}</td><td>${x[1].toFixed(1)}</td></tr>`).join('')}</table>`;
+  $('#c12',h).innerHTML=k&&k!=='0'?`<pre class="code">${hl('bool cmp(HocSinh a, HocSinh b) {\n'+C[k][1].split('\n').map(s=>'    '+s).join('\n')+'\n}\nsort(ds, ds + n, cmp);')}</pre><div class="note">Hàm <code>cmp(a, b)</code> trả về <b>true</b> khi a phải đứng <b>trước</b> b.${k==='d'?' Chú ý: các bạn bằng điểm có thứ tự không xác định — nên thêm tiêu chí phụ.':''}</div>`:'<div class="note">Chọn một cách sắp xếp để xem hàm so sánh và kết quả.</div>'}
+ h.addEventListener('click',e=>{if(e.target.dataset.c)draw(e.target.dataset.c)});draw();}}
+};
+
+/* ================= TRẮC NGHIỆM ================= */
+const Q={
+1:[['Thư viện nào cần nạp để dùng <code>cin</code>, <code>cout</code>?','',['iostream','cmath','string','algorithm'],0,'iostream = input/output stream, chứa cin và cout.'],
+['Mỗi câu lệnh trong C++ kết thúc bằng ký tự nào?','',['Dấu chấm phẩy ;','Dấu chấm .','Dấu hai chấm :','Xuống dòng'],0,'Thiếu dấu ; là lỗi biên dịch thường gặp nhất.'],
+['Chương trình C++ bắt đầu chạy từ đâu?','',['Hàm main()','Dòng đầu tiên của tệp','Dòng #include','Hàm được viết đầu tiên'],0,'Mọi chương trình C++ đều chạy từ hàm main().'],
+['Đoạn code sau in ra gì?','cout << "A" << \'\\n\' << "B";',['A và B trên hai dòng','AB','A\\nB','A B'],0,"'\\n' là ký tự xuống dòng."],
+['Cách viết chú thích một dòng là:','',['// chú thích','# chú thích','<!-- chú thích -->','** chú thích'],0,'// chú thích đến hết dòng; /* */ cho nhiều dòng.'],
+['<code>return 0;</code> trong hàm main có ý nghĩa gì?','',['Chương trình kết thúc bình thường','In số 0 ra màn hình','Khởi động lại chương trình','Gán biến về 0'],0,'Giá trị 0 báo hệ điều hành chương trình chạy thành công.']],
+2:[['Biến lưu giá trị 10^12 nên dùng kiểu nào?','',['long long','int','char','bool'],0,'int chỉ chứa đến khoảng 2,1×10^9; long long đến 9,2×10^18.'],
+['Sau lệnh sau, x bằng bao nhiêu?','int x = 7.9;',['7','8','7.9','Lỗi biên dịch'],0,'Gán số thực cho int thì phần thập phân bị cắt bỏ (không làm tròn).'],
+['Lệnh nào nhập hai số a, b?','',['cin >> a >> b;','cin << a << b;','cout >> a >> b;','cin >> a, b;'],0,'cin dùng toán tử >>, cout dùng <<.'],
+['Đoạn code in ra gì?','double x = 3.14159;\ncout << fixed << setprecision(2) << x;',['3.14','3.15','3.1','3.14159'],0,'fixed + setprecision(2) in đúng 2 chữ số thập phân (làm tròn: 3.14159 → 3.14).'],
+['Đoạn code in ra gì?',"char c = 'A';\ncout << c + 1;",['66','B','A1','Lỗi'],0,"c + 1 là phép toán trên số: mã 'A' = 65, cộng 1 được 66 (kiểu int)."],
+['Điều gì xảy ra?','const int MAX = 100;\nMAX = 200;',['Lỗi biên dịch','MAX thành 200','MAX vẫn 100, không báo lỗi','Chương trình bị treo'],0,'Hằng const không thể gán lại giá trị.']],
+3:[['<code>17 / 5</code> bằng bao nhiêu trong C++?','',['3','3.4','2','4'],0,'Hai số nguyên chia nhau → lấy phần nguyên.'],
+['<code>17 % 5</code> bằng bao nhiêu?','',['2','3','3.4','0'],0,'17 = 5 × 3 + 2.'],
+['<code>-7 / 2</code> bằng bao nhiêu trong C++?','',['-3','-4','-3.5','3'],0,'C++ cắt bỏ phần thập phân (làm tròn về 0), nên -3.5 → -3.'],
+['Sau đoạn code, j và i bằng bao nhiêu?','int i = 5;\nint j = i++;',['j = 5, i = 6','j = 6, i = 6','j = 5, i = 5','j = 6, i = 5'],0,'i++ trả về giá trị cũ (5) cho j, sau đó i mới tăng lên 6.'],
+['Giá trị cuối của a?','int a = 5;\na += 3;\na *= 2;',['16','13','11','10'],0,'a = 5 + 3 = 8, rồi a = 8 × 2 = 16.'],
+['Biểu thức nào đúng khi n là số chẵn?','',['n % 2 == 0','n / 2 == 0','n % 2 = 0','n % 2 == 1'],0,'Số chẵn chia 2 dư 0. Chú ý == là so sánh, = là gán.']],
+4:[['Vấn đề của câu lệnh sau là gì?','if (x = 5) cout << "Bang 5";',['Dùng phép gán thay vì so sánh, điều kiện luôn đúng','Lỗi biên dịch','Không có vấn đề gì','Chỉ sai khi x âm'],0,'x = 5 gán x thành 5, giá trị 5 khác 0 nên điều kiện luôn đúng. Phải viết x == 5.'],
+['Điều kiện năm nhuận đúng là:','',['(y%4==0 && y%100!=0) || y%400==0','y%4==0','y%4==0 || y%100==0','y%400==0 && y%4==0'],0,'Chia hết cho 400, hoặc chia hết cho 4 nhưng không chia hết cho 100.'],
+['Đoạn code in ra gì?','int x = 7;\nif (x > 5) cout << "A";\nelse if (x > 3) cout << "B";\nelse cout << "C";',['A','AB','B','C'],0,'Nhánh đầu đúng nên in A và bỏ qua các nhánh còn lại.'],
+['Đoạn code in ra gì?','int k = 1;\nswitch (k) {\n  case 1: cout << "X";\n  case 2: cout << "Y"; break;\n  default: cout << "Z";\n}',['XY','X','XYZ','Y'],0,'case 1 thiếu break nên chạy tràn xuống case 2, đến break mới dừng.'],
+['<code>int m = (a > b) ? a : b;</code> cho m là:','',['Giá trị lớn hơn trong a, b','Giá trị nhỏ hơn','Tổng a + b','true hoặc false'],0,'Toán tử 3 ngôi: đúng lấy a, sai lấy b.'],
+['<code>!(x > 3)</code> tương đương với:','',['x <= 3','x < 3','x >= 3','x != 3'],0,'Phủ định của "lớn hơn" là "nhỏ hơn hoặc bằng".']],
+5:[['Vòng lặp chạy bao nhiêu lần?','for (int i = 1; i <= 10; i++) ...',['10','9','11','Vô hạn'],0,'i nhận các giá trị 1, 2, ..., 10.'],
+['Đoạn code in ra gì?','for (int i = 0; i < 10; i += 3)\n    cout << i << " ";',['0 3 6 9','0 3 6','3 6 9','0 3 6 9 12'],0,'i = 12 không thỏa i < 10 nên dừng.'],
+['Với n = 4, s bằng bao nhiêu?','int s = 0;\nfor (int i = 1; i <= n; i++) s += i;',['10','4','6','24'],0,'1 + 2 + 3 + 4 = 10.'],
+['cnt bằng bao nhiêu?','int cnt = 0;\nfor (int i = 0; i < 3; i++)\n  for (int j = 0; j < 4; j++) cnt++;',['12','7','3','16'],0,'Vòng trong chạy 4 lần cho mỗi giá trị i, có 3 giá trị i → 12.'],
+['Đoạn code in ra gì?','for (int i = 10; i > 0; i /= 2)\n    cout << i << " ";',['10 5 2 1','10 5 2','10 5 2.5 1','10 8 6 4 2'],0,'Chia nguyên: 10 → 5 → 2 → 1 → 0 (dừng).'],
+['Vì sao đoạn code tính tổng sai?','for (int i = 1; i <= n; i++);\n{\n    s += i;\n}',['Dấu ; sau for làm thân vòng lặp rỗng','Thiếu khai báo n','i phải bắt đầu từ 0','Phải dùng while'],0,'Dấu ; kết thúc for ngay lập tức; khối {} chỉ chạy 1 lần sau đó (và i đã ra khỏi phạm vi → lỗi).']],
+6:[['Vòng lặp nào luôn chạy thân ít nhất một lần?','',['do – while','while','for','Cả ba'],0,'do-while chạy thân trước rồi mới kiểm tra điều kiện.'],
+['Với n = 1234, tong bằng?','while (n > 0) {\n  tong += n % 10;\n  n /= 10;\n}',['10','1234','4','24'],0,'1 + 2 + 3 + 4 = 10.'],
+['Lệnh break có tác dụng gì?','',['Thoát khỏi vòng lặp gần nhất','Thoát khỏi chương trình','Bỏ qua lần lặp hiện tại','Thoát mọi vòng lặp lồng nhau'],0,'break chỉ thoát vòng lặp chứa nó trực tiếp.'],
+['cnt bằng bao nhiêu?','for (int i = 1; i <= 10; i++) {\n  if (i % 3 == 0) continue;\n  cnt++;\n}',['7','3','10','6'],0,'Bỏ qua 3, 6, 9 → còn 10 − 3 = 7 lần.'],
+['Với n = 2026, thân vòng lặp chạy mấy lần?','while (n > 0) n /= 10;',['4','3','5','2026'],0,'Mỗi lần bỏ một chữ số: 2026 → 202 → 20 → 2 → 0.'],
+['Đoạn code nào lặp vô hạn?','',['int i = 1; while (i <= 5) cout << i;','for (int i = 1; i <= 5; i++) cout << i;','int i = 5; while (i > 0) i--;','int n = 9; while (n > 0) n /= 10;'],0,'Quên tăng i nên i <= 5 luôn đúng.']],
+7:[['Hàm không trả về giá trị có kiểu:','',['void','int','null','empty'],0,'void nghĩa là "không có giá trị trả về".'],
+['a bằng bao nhiêu sau khi gọi?','void f(int x) { x = 10; }\nint a = 5; f(a);',['5','10','0','Lỗi'],0,'Tham trị: hàm chỉ sửa bản sao x.'],
+['a bằng bao nhiêu sau khi gọi?','void g(int &x) { x = 10; }\nint a = 5; g(a);',['10','5','0','Lỗi'],0,'Tham chiếu: x chính là a.'],
+['Đoạn code in ra gì?','int sq(int x) { return x * x; }\ncout << sq(3) + sq(4);',['25','7','49','12'],0,'9 + 16 = 25.'],
+['Biến khai báo bên trong một hàm là:','',['Biến cục bộ, chỉ dùng trong hàm đó','Biến toàn cục','Hằng số','Dùng được ở mọi hàm'],0,'Biến cục bộ bị xóa khi hàm kết thúc.'],
+['Kiểm tra n nguyên tố, chỉ cần thử chia cho i từ 2 đến:','',['√n','n − 1','n / 2','n'],0,'Nếu n = p × q thì min(p, q) ≤ √n, nên dùng điều kiện i * i <= n.']],
+8:[['Với <code>int a[5];</code> chỉ số hợp lệ là:','',['0 đến 4','1 đến 5','0 đến 5','1 đến 4'],0,'Mảng đánh số từ 0.'],
+['a[2] bằng bao nhiêu?','int a[5] = {3, 1, 4, 1, 5};',['4','1','3','5'],0,'a[0]=3, a[1]=1, a[2]=4.'],
+['Truy cập a[5] khi khai báo <code>int a[5];</code> gây ra:','',['Lỗi vượt mảng, kết quả không xác định','Trả về 0','Tự mở rộng mảng','Lỗi biên dịch luôn luôn'],0,'C++ không kiểm tra chỉ số; vượt mảng có thể đọc rác hoặc làm chương trình bị lỗi.'],
+['dem bằng bao nhiêu?','int a[5] = {2, 5, 8, 11, 14}, dem = 0;\nfor (int i = 0; i < 5; i++)\n  if (a[i] % 2 == 0) dem++;',['3','2','5','4'],0,'Các số chẵn: 2, 8, 14.'],
+['Vì sao nên khởi tạo <code>mx = a[0]</code> thay vì <code>mx = 0</code>?','',['Mảng có thể toàn số âm, khi đó mx = 0 sai','Để chạy nhanh hơn','Vì C++ bắt buộc','Không có khác biệt'],0,'Ví dụ a = {-3, -1, -7}: mx = 0 cho kết quả sai, đáp án đúng là -1.'],
+['Mảng khai báo toàn cục <code>int a[100];</code> có giá trị ban đầu:','',['Toàn số 0','Giá trị rác','Toàn số 1','Lỗi nếu chưa gán'],0,'Biến/mảng toàn cục được tự động khởi tạo bằng 0.']],
+9:[['<code>int a[3][4];</code> có bao nhiêu phần tử?','',['12','7','20','9'],0,'3 hàng × 4 cột = 12.'],
+['Các ô trên đường chéo chính thỏa:','',['i == j','i + j == n - 1','i < j','i + j == n'],0,'Chéo chính đi từ góc trên trái xuống dưới phải.'],
+['Đường chéo phụ của ma trận n × n (chỉ số từ 0) thỏa:','',['i + j == n - 1','i == j','i + j == n','i - j == 1'],0,'Ví dụ n = 3: (0,2), (1,1), (2,0).'],
+['Để duyệt cột j, ta cho chạy biến nào?','',['i từ 0 đến n−1, giữ nguyên j','j từ 0 đến m−1, giữ nguyên i','Cả i và j','Không cần vòng lặp'],0,'Cột j gồm a[0][j], a[1][j], …, a[n-1][j].'],
+['b[1][2] bằng bao nhiêu?','int b[2][3] = {{1, 2, 3},\n               {4, 5, 6}};',['6','5','2','3'],0,'Hàng 1 là {4, 5, 6}, cột 2 là số 6.'],
+['Một ô (i, j) ở giữa lưới có bao nhiêu ô kề cạnh?','',['4','8','2','6'],0,'Trên, dưới, trái, phải: dùng mảng dx, dy.']],
+10:[['<code>s.size()</code> với <code>s = "Tin hoc"</code> bằng:','',['7','6','8','2'],0,'Tính cả dấu cách: T-i-n-␣-h-o-c.'],
+['<code>s[0]</code> với <code>s = "C++"</code> là:',"",["'C'","'+'",'"C++"','Lỗi'],0,'Ký tự đầu tiên có chỉ số 0.'],
+['Lệnh đọc cả một dòng có dấu cách là:','',['getline(cin, s);','cin >> s;','cin.get(s);','read(s);'],0,'cin >> s dừng lại ở dấu cách.'],
+['s bằng gì?','string s = "abc";\ns += "de";',['"abcde"','"deabc"','"abc de"','Lỗi'],0,'+= nối thêm vào cuối xâu.'],
+['Điều kiện nào kiểm tra c là chữ số?','',["c >= '0' && c <= '9'","c >= 0 && c <= 9","c == 'số'","c > '0' || c < '9'"],0,"So sánh với ký tự '0' và '9', không phải số 0 và 9."],
+["Biểu thức nào đổi ký tự '7' thành số 7?",'',["c - '0'","c + '0'","(int)c","c - 0"],0,"Mã '7' là 55, mã '0' là 48 → 55 − 48 = 7."]],
+11:[['<code>v.push_back(x)</code> làm gì?','',['Thêm x vào cuối vector','Thêm x vào đầu','Xóa x','Tìm x'],0,'push_back = đẩy vào phía sau.'],
+['Sau khi sắp xếp, v là:','vector<int> v = {5, 2, 8};\nsort(v.begin(), v.end());',['2 5 8','8 5 2','5 2 8','2 8 5'],0,'sort mặc định sắp tăng dần.'],
+['Sắp xếp giảm dần viết thế nào?','',['sort(v.begin(), v.end(), greater<int>());','sort(v.end(), v.begin());','sort(v.begin(), v.end(), less<int>());','reverse(v.begin(), v.end());'],0,'greater<int>() đảo thứ tự so sánh. reverse chỉ đảo, không sắp xếp.'],
+['v.size() bằng bao nhiêu?','vector<int> v;\nv.push_back(1); v.push_back(2); v.push_back(3);\nv.pop_back();',['2','3','1','0'],0,'Thêm 3 phần tử, xóa 1 → còn 2.'],
+['<code>*max_element(v.begin(), v.end())</code> cho:','',['Giá trị lớn nhất','Vị trí lớn nhất','Số phần tử','Tổng các phần tử'],0,'max_element trả về con trỏ (iterator) tới phần tử lớn nhất; dấu * lấy giá trị.'],
+['Độ phức tạp của hàm sort là:','',['O(n log n)','O(n²)','O(n)','O(1)'],0,'Đủ nhanh cho n đến khoảng 10^6.']],
+12:[['Truy cập điểm của học sinh h viết thế nào?','struct HocSinh { string ten; double diem; };\nHocSinh h;',['h.diem','h->diem','diem.h','h[diem]'],0,'Dùng dấu chấm để truy cập thành phần của struct.'],
+['p.second bằng bao nhiêu?','pair<int, int> p = {3, 7};',['7','3','10','Lỗi'],0,'first = 3, second = 7.'],
+['sort vector pair mặc định sắp theo:','',['first tăng, bằng nhau thì second tăng','second tăng','first giảm','Không sắp được'],0,'pair được so sánh theo first trước, rồi đến second.'],
+['Hàm so sánh để sắp điểm giảm dần:','',['return a.diem > b.diem;','return a.diem < b.diem;','return a.diem == b.diem;','return a.diem - b.diem;'],0,'Trả về true khi a phải đứng trước b, tức điểm a lớn hơn.'],
+['Khai báo mảng lưu 100 học sinh:','',['HocSinh ds[100];','struct ds[100];','HocSinh[100] ds;','array ds HocSinh 100;'],0,'Kiểu dữ liệu là HocSinh, tên mảng ds.'],
+['Hàm so sánh nào đúng: điểm giảm, bằng điểm thì tên tăng?','',['if (a.diem != b.diem) return a.diem > b.diem; return a.ten < b.ten;','return a.diem > b.diem && a.ten < b.ten;','return a.diem > b.diem || a.ten < b.ten;','if (a.ten < b.ten) return true; return a.diem > b.diem;'],0,'Xét tiêu chí ưu tiên cao (điểm) trước, chỉ khi bằng điểm mới xét tên.']]
+};
+
+/* ================= DỮ LIỆU CHƯƠNG ================= */
+const CH=[[1,'Làm quen với C++',['Hiểu cấu trúc một chương trình C++','In dữ liệu ra màn hình bằng cout','Biết quy trình viết – biên dịch – chạy – nộp bài']],
+[2,'Biến, kiểu dữ liệu và nhập xuất',['Khai báo, gán và sử dụng biến','Chọn đúng kiểu int, long long, double, char, bool, string','Nhập bằng cin, in số thực cố định chữ số','Nhận biết lỗi tràn số']],
+[3,'Toán tử và biểu thức',['Phân biệt chia nguyên / và chia dư %','Dùng toán tử gán rút gọn, ++, --','Viết biểu thức so sánh, logic đúng thứ tự ưu tiên']],
+[4,'Câu lệnh rẽ nhánh',['Dùng if – else, else if','Kết hợp điều kiện bằng && || !','Dùng switch – case và toán tử 3 ngôi']],
+[5,'Vòng lặp for',['Hiểu thứ tự thực hiện của vòng for','Viết vòng lặp tăng, giảm, bước nhảy khác 1','Dùng vòng lặp lồng nhau']],
+[6,'while, do-while, break, continue',['Chọn đúng loại vòng lặp','Tách chữ số của một số','Dùng break, continue; tránh lặp vô hạn']],
+[7,'Hàm',['Viết hàm có tham số và giá trị trả về','Phân biệt tham trị và tham chiếu','Phân biệt biến cục bộ, toàn cục']],
+[8,'Mảng một chiều',['Khai báo, nhập, duyệt mảng','Tìm max/min, tính tổng, đếm','Tránh lỗi vượt chỉ số mảng']],
+[9,'Mảng hai chiều',['Hiểu chỉ số hàng, cột','Duyệt hàng, cột, đường chéo','Duyệt 4 ô kề cạnh trên lưới']],
+[10,'Xâu ký tự',['Dùng các hàm của string','Xử lý từng ký tự, mã ASCII','Đọc xâu có dấu cách bằng getline']],
+[11,'Vector và thư viện algorithm',['Dùng vector như mảng động','Sắp xếp, đảo ngược, tìm max bằng thư viện','Biết độ phức tạp của sort']],
+[12,'Struct và pair',['Gom dữ liệu thành struct, pair','Sắp xếp theo nhiều tiêu chí bằng hàm so sánh']]];
+CH.push(...CH2);Object.assign(VIZ,VIZ2);Object.assign(Q,Q2);
+const GRP=[['Giai đoạn 1 · Nền tảng C++',1,12],['Giai đoạn 2 · CTDL & thuật toán',13,24]];
+const NEXT=[['de1','Đề luyện tập số 1'],['de2','Đề luyện tập số 2'],['de3','Đề luyện tập số 3'],['tongon','Thi thử trắc nghiệm']];
+
+/* ================= GIAO DIỆN ================= */
+function best(id){return store.get('q'+id,null)}
+function navHTML(cur){let h=`<a href="#home" class="${cur==='home'?'on':''}"><span class="n">⌂</span>Trang chủ</a>`;
+ GRP.forEach(([g,a,z])=>{h+=`<div class="grp">${g}</div>`+CH.slice(a-1,z).map(([i,t])=>{const b=best(i);return `<a href="#ch${i}" class="${cur===i?'on':''}"><span class="n">${i}</span>${t}<span class="st">${b===null?'':b>=5?'✅':'🟡'}</span></a>`}).join('')});
+ h+='<div class="grp">Giai đoạn 3 · Luyện đề</div>'+NEXT.map(([k,t],i)=>`<a href="#${k}" class="${cur===k?'on':''}"><span class="n">${i<3?'Đ'+(i+1):'TN'}</span>${t}</a>`).join('');return h}
+function home(){const done=CH.filter(c=>best(c[0])>=5).length;
+ return `<div class="card hero"><div class="kicker" style="color:#fbbf24">Bồi dưỡng học sinh giỏi Tin học</div><h2>Học C++ bằng cách <span>nhìn thấy</span> từng dòng lệnh chạy</h2><p>Mỗi bài gồm: lý thuyết ngắn gọn → minh họa tương tác chạy từng bước → trắc nghiệm kiểm tra hiểu bài.</p><div class="row" style="margin-top:14px"><a href="#ch1" class="b pri" style="text-decoration:none">Bắt đầu Giai đoạn 1 →</a><a href="#ch13" class="b" style="text-decoration:none">Giai đoạn 2 →</a><span style="color:#c7d6ef">Đã hoàn thành ${done}/${CH.length} chương</span></div></div>
+ <div class="card"><h3>Cách học hiệu quả</h3><ul><li>Đọc phần <b>Lý thuyết</b>, chép lại các đoạn code mẫu vào Dev-C++ và chạy thử.</li><li>Sang tab <b>Minh họa</b>: tự đổi dữ liệu, bấm <b>Bước tiếp ▶</b> và đoán trước kết quả rồi mới xem.</li><li>Làm <b>Trắc nghiệm</b>: đạt từ 5/6 câu (✅) mới chuyển sang chương sau. Làm sai thì đọc giải thích và làm lại.</li><li>Kết quả trắc nghiệm được lưu trên trình duyệt của em.</li></ul></div>
+ <div class="phase">${[['Giai đoạn 1','Nền tảng ngôn ngữ C++ (Chương 1–12)','Đang mở'],['Giai đoạn 2','Cấu trúc dữ liệu và thuật toán (Bài 13–24)','Đang mở'],['Giai đoạn 3','Luyện đề và thi thử','Đang mở']].map(x=>`<div><div class="kicker">${x[2]}</div><b>${x[0]}</b><div class="lab">${x[1]}</div></div>`).join('')}</div>`}
+function chapter(id,tab){const [i,t,G]=CH[id-1];
+ const tabs=[['lt','📖 Lý thuyết'],['mh','🧪 Minh họa'],['tn','✍️ Trắc nghiệm']];
+ let h=`<div class="card"><div class="kicker">${CH[id-1][3]||'Chương '+i}</div><h2 class="title">${t}</h2><div class="goals"><b>Mục tiêu</b><ul>${G.map(g=>`<li>${g}</li>`).join('')}</ul></div></div>
+ <div class="tabs">${tabs.map(([k,n])=>`<button data-tab="${k}" class="${tab===k?'on':''}">${n}</button>`).join('')}</div><div class="card" id="body"></div>
+ <div class="pager">${i>1?`<a href="#ch${i-1}"><small>← Chương trước</small>${CH[i-2][1]}</a>`:''}${i<CH.length?`<a class="r" href="#ch${i+1}"><small>Chương sau →</small>${CH[i][1]}</a>`:''}</div>`;
+ return h}
+function fillBody(id,tab){const b=$('#body');
+ if(tab==='lt'){b.innerHTML=md($('#t'+id).textContent)+`<div class="row" style="margin-top:16px"><button class="b pri" data-go="mh">Xem minh họa →</button></div>`}
+ if(tab==='mh'){b.innerHTML=`<div class="viz-h"><span class="tag">Tương tác</span><h3 style="margin:0">${VIZ[id].t}</h3></div><div id="viz"></div><div class="row" style="margin-top:16px"><button class="b pri" data-go="tn">Làm trắc nghiệm →</button></div>`;VIZ[id].f($('#viz'))}
+ if(tab==='tn')quiz(id,b)}
+function quiz(id,b){const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+ const qs=Q[id].map(([q,c,o,a,ex])=>{const ord=shuffle(o.map((t,k)=>[t,k===a]));return{q,c,ord,ex}});const pick={};const pb=best(id);
+ b.innerHTML=`<div class="viz-h"><span class="tag">${qs.length} câu</span><h3 style="margin:0">Trắc nghiệm · ${CH[id-1][1]}</h3>${pb!==null?`<span class="lab" style="margin-left:auto">Điểm cao nhất: ${pb}/${qs.length}</span>`:''}</div>`+
+ qs.map((x,i)=>`<div class="q" data-q="${i}"><div class="qt">Câu ${i+1}. ${x.q}</div>${x.c?`<pre class="code">${hl(x.c)}</pre>`:''}${x.ord.map((o,k)=>`<div class="opt" data-k="${k}"><span class="lt">${'ABCD'[k]}.</span><span>${o[0].startsWith('<')?o[0]:esc(o[0])}</span></div>`).join('')}<div class="ex">💡 ${x.ex}</div></div>`).join('')+
+ `<div class="row"><button class="b pri" id="sub">Nộp bài</button><button class="b" id="again">↻ Làm lại (đảo đáp án)</button></div><div id="sc"></div>`;
+ let done=false;
+ b.onclick=e=>{const o=e.target.closest('.opt');if(o&&!done){const q=o.closest('.q');q.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));o.classList.add('sel');pick[q.dataset.q]=+o.dataset.k}
+  if(e.target.id==='again')quiz(id,b);
+  if(e.target.id==='sub'&&!done){if(Object.keys(pick).length<qs.length){$('#sc',b).innerHTML=`<div class="score" style="background:#fef3c7">Em còn ${qs.length-Object.keys(pick).length} câu chưa chọn đáp án.</div>`;return}
+   done=true;let s=0;b.querySelectorAll('.q').forEach(q=>{const i=q.dataset.q,x=qs[i];q.classList.add('done');q.querySelectorAll('.opt').forEach((o,k)=>{if(x.ord[k][1])o.classList.add('ok');else if(+pick[i]===k)o.classList.add('no')});if(x.ord[pick[i]][1])s++});
+   const prev=best(id);if(prev===null||s>prev)store.set('q'+id,s);
+   const good=s>=5;$('#sc',b).innerHTML=`<div class="score" style="background:${good?'var(--okb)':'var(--badb)'};color:${good?'var(--ok)':'var(--bad)'}">${good?'🎉':'📚'} Kết quả: ${s}/${qs.length} câu đúng. ${good?'Em đã nắm vững chương này!':'Hãy đọc giải thích, xem lại minh họa rồi làm lại nhé.'}</div>`;$('#nav').innerHTML=navHTML(id)}
+  const g=e.target.dataset.go;if(g)setTab(g)};
+}
+let cur='home',curTab='lt';
+function setTab(t){curTab=t;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));fillBody(cur,t);$('.tabs').scrollIntoView({behavior:'smooth',block:'start'})}
+function route(){clearInterval(TMR);const m=/^#ch(\d+)$/.exec(location.hash),hs=location.hash.slice(1);cur=m&&+m[1]>=1&&+m[1]<=CH.length?+m[1]:NEXT.some(x=>x[0]===hs)?hs:'home';curTab='lt';
+ $('#nav').innerHTML=navHTML(cur);$('#nav').classList.remove('open');
+ if(/^de\d$/.test(cur)){$('#main').innerHTML=dePage(+cur[2]);deInit(+cur[2])}else if(cur==='tongon'){$('#main').innerHTML=tongOn();tongOnInit()}else if(cur==='home'){$('#main').innerHTML=home()}else{$('#main').innerHTML=chapter(cur,curTab);fillBody(cur,curTab);$('.tabs').onclick=e=>{if(e.target.dataset.tab)setTab(e.target.dataset.tab)}}
+ window.scrollTo(0,0)}
+$('#menuBtn').onclick=()=>$('#nav').classList.toggle('open');
+addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
